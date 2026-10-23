@@ -148,6 +148,33 @@ img{display:block;max-width:100%}
  .gallery{grid-template-columns:repeat(2,1fr)}.gallery img{height:140px}.day-toolbar select{width:100%}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Travel tools upgrade */
+.tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:18px}
+.tool-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);min-width:0}
+.tool-card h3{margin:0 0 8px;font-family:Georgia,serif;font-size:22px;font-weight:500}
+.tool-card p{color:var(--muted)}
+.tool-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tool-row input,.tool-row select{flex:1;min-width:110px}
+.tool-input{width:100%;border:1px solid var(--line);background:#fffdf8;border-radius:12px;padding:11px;color:var(--ink)}
+.result-big{font-family:Georgia,serif;font-size:32px;color:var(--forest);margin:10px 0}
+.weather-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:12px}
+.weather-place{background:#f3f0e8;border-radius:14px;padding:12px;min-width:0}
+.weather-place strong{display:block}
+.weather-place small{color:var(--muted)}
+.checklist-day{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.day-check{display:flex;gap:8px;align-items:center;background:#f7f4ed;border-radius:10px;padding:9px}
+.day-check input{accent-color:var(--sage-dark)}
+.sync-note{background:#f3f0e8;border-radius:14px;padding:14px;color:var(--muted);font-size:12px}
+.mobile-travel-toggle{position:fixed;right:16px;bottom:16px;z-index:50;box-shadow:0 8px 28px #26382a30}
+body.travel-mode .app{max-width:850px;padding:12px}
+body.travel-mode .hero{min-height:220px}
+body.travel-mode .hero-copy{padding:24px}
+body.travel-mode .hero h2{font-size:38px}
+body.travel-mode .nav{position:sticky;top:6px;z-index:20}
+body.travel-mode .activity{padding:17px 12px}
+body.travel-mode .topbar .brand p,body.travel-mode .hero-photo,body.travel-mode .hero-copy>p{display:none}
+@media(max-width:760px){.tool-grid{grid-template-columns:1fr}.weather-list{grid-template-columns:1fr}.checklist-day{grid-template-columns:1fr}.mobile-travel-toggle{right:10px;bottom:10px}.app{padding:12px}.hero{grid-template-columns:1fr}.hero-photo{min-height:180px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -183,16 +210,18 @@ img{display:block;max-width:100%}
     <div class="stat"><div class="stat-label">Trip duration</div><div class="stat-value">14 days</div><div class="stat-note">23 Dec — 5 Jan</div></div>
     <div class="stat"><div class="stat-label">Budget</div><div class="stat-value" id="statBudget">RM 5,000</div><div class="stat-note">Your planned trip budget</div></div>
     <div class="stat"><div class="stat-label">Expenses logged</div><div class="stat-value" id="statSpent">RM 0</div><div class="stat-note" id="statSpentNote">Nothing logged yet</div></div>
-    <div class="stat"><div class="stat-label">Packing progress</div><div class="stat-value" id="statPacking">0%</div><div class="progress"><span id="packingBar"></span></div></div>
+    <div class="stat"><div class="stat-label">To-do progress</div><div class="stat-value" id="statPacking">0%</div><div class="progress"><span id="packingBar"></span></div></div>
   </section>
 
   <nav class="nav" aria-label="Main navigation">
     <button class="active" data-tab="overview">Overview</button>
     <button data-tab="itinerary">Itinerary</button>
     <button data-tab="budget">Budget</button>
-    <button data-tab="packing">Packing list</button>
+    <button data-tab="packing">To-do list</button>
     <button data-tab="bookings">Bookings</button>
-    <button data-tab="gallery">Inspiration</button>
+    <button data-tab="gallery">Food spots</button>
+    <button data-tab="guide">Travel guide</button>
+    <button data-tab="tools">Travel tools</button>
   </nav>
 
   <main>
@@ -211,6 +240,10 @@ img{display:block;max-width:100%}
           <div class="destination-photo"><img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=900&q=80" alt="Korean traditional architecture" loading="lazy"><span>29 Dec – 2 Jan</span></div>
           <div class="destination-body"><h3>Busan</h3><p>Coastal views, seafood, colourful neighbourhoods and slow mornings.</p><span class="pill">Coast</span><span class="pill">Food</span><span class="pill">Explore</span></div>
         </article>
+      </div>
+      <div class="card" style="margin-top:18px;margin-bottom:18px">
+        <div class="card-head"><div><h3>Countdown to departure</h3><p class="muted small-text">Your winter adventure is getting closer.</p></div><span class="pill">23 Dec 2026</span></div>
+        <div class="result-big" id="countdownValue">Loading…</div><div class="meta" id="countdownNote">Days until your trip begins</div>
       </div>
       <div class="layout-two" style="margin-top:18px">
         <div class="card">
@@ -265,13 +298,14 @@ img{display:block;max-width:100%}
     </section>
 
     <section class="panel" id="panel-packing">
-      <div class="section-head"><div><h2>Packing list</h2><p>Winter layers, travel essentials and the little extras.</p></div><button class="btn primary" id="addPackingBtn">＋ Add item</button></div>
+      <div class="section-head"><div><h2>Before-you-go to-do list</h2><p>Keep track of the things to arrange before and during your Korea trip.</p></div><button class="btn primary" id="addPackingBtn">＋ Add task</button></div>
       <div class="layout-two">
-        <div class="card"><div class="card-head"><h3>Don't forget</h3><span class="pill" id="packingCount">0 items</span></div><div class="check-progress"><span id="packingProgressText">0 of 0 packed</span><button class="btn small" id="clearPackedBtn">Remove packed</button></div><div id="packingList" class="checklist"></div></div>
-        <div class="card"><h3>Winter packing notes</h3><p class="muted">December and January can be very cold, especially on the ski slopes. Check the forecast before departure and layer up.</p><div class="expense-list">
-          <div class="expense"><div><strong>Warm layers</strong><div class="meta">Thermal base layers, sweaters, winter coat</div></div><span>❄</span></div>
-          <div class="expense"><div><strong>Snow essentials</strong><div class="meta">Gloves, thick socks, beanie, waterproof shoes</div></div><span>♧</span></div>
-          <div class="expense"><div><strong>Travel documents</strong><div class="meta">Passport, flight details, hotel confirmations</div></div><span>✧</span></div>
+        <div class="card"><div class="card-head"><h3>Your checklist</h3><span class="pill" id="packingCount">0 tasks</span></div><div class="check-progress"><span id="packingProgressText">0 of 0 completed</span><button class="btn small" id="clearPackedBtn">Remove completed</button></div><div id="packingList" class="checklist"></div></div>
+        <div class="card"><h3>Suggested things to do</h3><p class="muted">Starter tasks are already added to your checklist. Tick them off or add your own.</p><div class="expense-list">
+          <div class="expense"><div><strong>Travel documents</strong><div class="meta">Check passport validity, entry requirements and travel insurance.</div></div><span>✧</span></div>
+          <div class="expense"><div><strong>Bookings</strong><div class="meta">Confirm flights, hotels, Vivaldi Park stay/activities and private transfers.</div></div><span>⌂</span></div>
+          <div class="expense"><div><strong>Money & connectivity</strong><div class="meta">Plan cash exchange, cards, eSIM/roaming and transport payment.</div></div><span>₩</span></div>
+          <div class="expense"><div><strong>Before leaving</strong><div class="meta">Download offline maps, save emergency contacts and check weather.</div></div><span>❄</span></div>
         </div></div>
       </div>
     </section>
@@ -304,16 +338,82 @@ img{display:block;max-width:100%}
     </section>
 
     <section class="panel" id="panel-gallery">
-      <div class="section-head"><div><h2>Inspiration board</h2><p>A little moodboard for the places you're dreaming of.</p></div><a class="btn" href="https://www.google.com/maps/search/Seoul+Busan+Vivaldi+Park" target="_blank" rel="noopener">Explore map ↗</a></div>
-      <div class="gallery">
-        <figure><img src="https://images.unsplash.com/photo-1538485399081-7191377e8241?auto=format&fit=crop&w=800&q=80" alt="Seoul cityscape" loading="lazy"><figcaption>City lights in Seoul</figcaption></figure>
-        <figure><img src="https://images.unsplash.com/photo-1517299321609-52687d1bc55a?auto=format&fit=crop&w=800&q=80" alt="Snow-covered winter scene" loading="lazy"><figcaption>Chasing the snow</figcaption></figure>
-        <figure><img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80" alt="Traditional East Asian architecture" loading="lazy"><figcaption>Quiet old streets</figcaption></figure>
-        <figure><img src="https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=800&q=80" alt="Japanese-style city street" loading="lazy"><figcaption>Wandering without a plan</figcaption></figure>
-        <figure><img src="https://images.unsplash.com/photo-1517154421773-0529f29ea451?auto=format&fit=crop&w=800&q=80" alt="Winter city travel" loading="lazy"><figcaption>Winter postcards</figcaption></figure>
-        <figure><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80" alt="Mountain landscape" loading="lazy"><figcaption>Take the scenic route</figcaption></figure>
+      <div class="section-head"><div><h2>Food spots to save</h2><p>Starter ideas for Korean meals, markets and café stops. Check recent reviews, opening hours and holiday closures before visiting.</p></div><a class="btn" href="https://www.google.com/maps/search/Korean+food+Seoul+Busan" target="_blank" rel="noopener">Explore food on Maps ↗</a></div>
+      <div class="destination-grid">
+        <article class="destination"><div class="destination-photo"><img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=900&q=80" alt="Korean market food" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=900&q=80'"></div><div class="destination-body"><h3>Gwangjang Market</h3><p>Seoul · Market snacks such as bindaetteok, mayak gimbap and noodles.</p><a class="btn small" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Gwangjang+Market+Seoul">Open map ↗</a></div></article>
+        <article class="destination"><div class="destination-photo"><img src="https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&w=900&q=80" alt="Korean street food" loading="lazy"></div><div class="destination-body"><h3>Myeongdong street food</h3><p>Seoul · Easy evening stop for street snacks and shopping. Prices vary by stall.</p><a class="btn small" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Myeongdong+Street+Food+Seoul">Open map ↗</a></div></article>
+        <article class="destination"><div class="destination-photo"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=900&q=80" alt="Cafe food and drinks" loading="lazy"></div><div class="destination-body"><h3>Ikseon-dong cafés</h3><p>Seoul · Small cafés and dessert stops in pretty alleyways.</p><a class="btn small" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Ikseon-dong+cafes+Seoul">Open map ↗</a></div></article>
+        <article class="destination"><div class="destination-photo"><img src="https://images.unsplash.com/photo-1559737558-2f5a35f4523b?auto=format&fit=crop&w=900&q=80" alt="Seafood meal" loading="lazy"></div><div class="destination-body"><h3>Jagalchi Market</h3><p>Busan · Famous seafood market area; check menu prices before ordering.</p><a class="btn small" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Jagalchi+Market+Busan">Open map ↗</a></div></article>
+        <article class="destination"><div class="destination-photo"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80" alt="Korean meal" loading="lazy"></div><div class="destination-body"><h3>BIFF Square</h3><p>Busan · Street snacks and food stalls around Nampo-dong.</p><a class="btn small" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=BIFF+Square+Busan+food">Open map ↗</a></div></article>
+        <article class="destination"><div class="destination-photo"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80" alt="Warm Korean soup meal" loading="lazy"></div><div class="destination-body"><h3>Busan gukbap</h3><p>Busan · Try dwaeji-gukbap, a local pork-and-rice soup specialty.</p><a class="btn small" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Busan+dwaeji+gukbap">Open map ↗</a></div></article>
       </div>
-      <p class="small-text muted" style="margin-top:14px">Images are loaded from Unsplash and require an internet connection. They are inspiration images, not guaranteed photographs of the exact locations.</p>
+      <div class="card" style="margin-top:18px"><h3>Add your own food spot</h3><p class="muted small-text">Save a restaurant, café or dish you want to try. This list is saved in this browser.</p><div class="field-grid"><div class="field"><label for="foodSpotName">Name / dish</label><input id="foodSpotName" placeholder="e.g. tteokbokki place from TikTok"></div><div class="field"><label for="foodSpotArea">Area</label><input id="foodSpotArea" placeholder="e.g. Hongdae, Seoul"></div></div><div class="field"><label for="foodSpotNotes">Notes (optional)</label><input id="foodSpotNotes" placeholder="Must-try dish, price, reservation…"></div><button class="btn primary" id="addFoodSpotBtn">＋ Save food spot</button><div id="savedFoodSpots" class="expense-list" style="margin-top:14px"></div></div>
+    </section>
+
+    <section class="panel" id="panel-guide">
+      <div class="section-head"><div><h2>Korea travel guide</h2><p>Useful apps, practical winter tips and emergency contacts to keep close.</p></div><a class="btn" href="https://www.kln.gov.my/web/kor_seoul/home" target="_blank" rel="noopener">Official Malaysian Embassy page ↗</a></div>
+      <div class="layout-two">
+        <div class="card"><div class="eyebrow">01 · Emergency contacts</div><h3>Save these before departure</h3>
+          <div class="expense-list">
+            <div class="expense"><div><strong>Malaysia Embassy, Seoul</strong><div class="meta">General line: +82 2-2077-8600<br>Emergency: +82 10-8974-8699<br>129, Dokseodang-ro, Hannam-dong, Yongsan-gu, Seoul</div><div class="meta"><a href="mailto:mwseoul@kln.gov.my">mwseoul@kln.gov.my</a> · <a href="https://www.kln.gov.my/web/kor_seoul/home" target="_blank" rel="noopener">Official details ↗</a></div></div><span>🇲🇾</span></div>
+            <div class="expense"><div><strong>Police — 112</strong><div class="meta">For police emergencies.</div></div><a class="btn small" href="tel:112">Call 112</a></div>
+            <div class="expense"><div><strong>Fire / ambulance — 119</strong><div class="meta">For fire and medical emergencies.</div></div><a class="btn small" href="tel:119">Call 119</a></div>
+            <div class="expense"><div><strong>Korea Travel Hotline — 1330</strong><div class="meta">Tourist information and interpretation; Malay-language support is listed by the Korea Tourism Organization. Availability of languages/hours may vary.</div><a class="btn small" target="_blank" rel="noopener" href="https://english.visitkorea.or.kr/svc/contents/infoHtmlView.do?menuSn=454&vcontsId=140632">Official hotline info ↗</a></div><span>☎</span></div>
+          </div><p class="small-text muted">Save these details offline. Confirm contact numbers on the official Embassy website shortly before travel.</p>
+        </div>
+        <div class="card"><div class="eyebrow">02 · Apps to download</div><h3>Useful Korea travel apps</h3><div class="expense-list">
+          <div class="expense"><div><strong>Naver Map</strong><div class="meta">Local maps, walking routes and transit directions.</div></div><a class="btn small" target="_blank" rel="noopener" href="https://map.naver.com/">Open ↗</a></div>
+          <div class="expense"><div><strong>Papago</strong><div class="meta">Translate Korean text, menus and conversations; download language options if available.</div></div><a class="btn small" target="_blank" rel="noopener" href="https://papago.naver.com/">Open ↗</a></div>
+          <div class="expense"><div><strong>Kakao T</strong><div class="meta">Taxi booking; set up and check payment/verification requirements before you need a ride.</div></div><a class="btn small" target="_blank" rel="noopener" href="https://service.kakaomobility.com/">Open ↗</a></div>
+          <div class="expense"><div><strong>KakaoTalk</strong><div class="meta">Common messaging app; useful for contacting some businesses and hosts.</div></div><a class="btn small" target="_blank" rel="noopener" href="https://www.kakaocorp.com/page/service/service/KakaoTalk">Open ↗</a></div>
+          <div class="expense"><div><strong>Subway Korea / Korail</strong><div class="meta">For subway routes and train planning. Check KTX bookings through the official Korail channel.</div></div><a class="btn small" target="_blank" rel="noopener" href="https://www.letskorail.com/">Korail ↗</a></div>
+        </div></div>
+      </div>
+      <div class="card" style="margin-top:18px"><div class="eyebrow">03 · Little things that help</div><h3>Practical travel tips</h3><div class="layout-two"><div><ul><li><strong>Transport:</strong> check whether a T-money or other transport card suits your routes; keep a little cash for top-ups if needed.</li><li><strong>Maps:</strong> save hotel addresses in Korean and download offline map areas before you leave.</li><li><strong>Connectivity:</strong> arrange an eSIM, SIM or roaming plan and keep your hotel address accessible offline.</li><li><strong>Money:</strong> carry more than one payment method and separate backup cash from your wallet.</li><li><strong>Etiquette:</strong> check queueing, dining and temple/palace rules; remove shoes where signs or hosts ask.</li></ul></div><div><ul><li><strong>Winter:</strong> use thermal layers, insulated gloves, warm socks, a beanie, lip balm and shoes with grip. Vivaldi Park can feel colder than Seoul.</li><li><strong>Snow & ice:</strong> walk slowly, watch for slippery pavement and leave extra travel time during snowfall.</li><li><strong>Food:</strong> mention allergies clearly; use Papago to translate dietary needs and confirm ingredients with staff.</li><li><strong>Bookings:</strong> recheck holiday opening hours and reservation confirmations, especially around Christmas and New Year.</li><li><strong>Safety:</strong> share your itinerary with someone you trust and keep emergency contacts and travel insurance details offline.</li></ul></div></div></div>
+    </section>
+
+    <section class="panel" id="panel-tools">
+      <div class="section-head"><div><h2>Your travel toolkit</h2><p>Maps, weather planning, currency and a quick checklist for travelling days.</p></div><button class="btn primary" id="travelModeBtn">☼ Toggle travel mode</button></div>
+      <div class="tool-grid">
+        <div class="tool-card">
+          <div class="eyebrow">01 · Explore</div><h3>Maps & directions</h3><p>Search any place or open the main destinations. Activity locations in your itinerary also link directly to Google Maps.</p>
+          <div class="field"><label for="mapSearch">Place or address</label><input class="tool-input" id="mapSearch" placeholder="e.g. Gyeongbokgung Palace"></div>
+          <div class="tool-row"><button class="btn primary" id="mapSearchBtn">Search Google Maps ↗</button><button class="btn" id="routeBtn">Seoul → Busan ↗</button></div>
+          <div class="weather-list"><a class="weather-place" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Seoul+South+Korea"><strong>Seoul</strong><small>Open map ↗</small></a><a class="weather-place" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Vivaldi+Park+Hongcheon"><strong>Vivaldi Park</strong><small>Open map ↗</small></a><a class="weather-place" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Busan+South+Korea"><strong>Busan</strong><small>Open map ↗</small></a></div>
+        </div>
+        <div class="tool-card">
+          <div class="eyebrow">02 · Prepare</div><h3>Weather & snow outlook</h3><p>Long-range forecasts for 23 December–5 January are not reliable yet. Forecasts usually become more useful closer to departure; snow conditions at Vivaldi Park can change quickly.</p>
+          <div class="sync-note" id="weatherStatus">Loading near-term weather… Long-range forecasts for late December are not available yet.</div><div class="weather-list" id="weatherLive"><div class="weather-place">Seoul<br><small>Loading…</small></div><div class="weather-place">Vivaldi Park<br><small>Loading…</small></div><div class="weather-place">Busan<br><small>Loading…</small></div></div>
+          <div class="weather-list">
+            <a class="weather-place" target="_blank" rel="noopener" href="https://www.google.com/search?q=Seoul+weather+forecast"><strong>Seoul</strong><small>Check forecast ↗</small></a>
+            <a class="weather-place" target="_blank" rel="noopener" href="https://www.google.com/search?q=Vivaldi+Park+snow+forecast"><strong>Vivaldi Park</strong><small>Snow conditions ↗</small></a>
+            <a class="weather-place" target="_blank" rel="noopener" href="https://www.google.com/search?q=Busan+weather+forecast"><strong>Busan</strong><small>Check forecast ↗</small></a>
+          </div>
+          <p class="small-text"><strong>Winter reminder:</strong> thermal base layers, insulated coat, gloves, beanie, scarf, thick socks, lip balm and waterproof shoes. Add hand warmers for the ski resort.</p>
+        </div>
+        <div class="tool-card">
+          <div class="eyebrow">03 · Spend wisely</div><h3>KRW ↔ MYR converter</h3><p>Indicative mid-market rate; your money changer may offer a different rate and fees.</p>
+          <div class="field"><label for="fxAmount">Amount</label><input class="tool-input" id="fxAmount" type="number" min="0" step="any" value="100000"></div>
+          <div class="field-grid"><div class="field"><label for="fxFrom">From</label><select id="fxFrom" class="tool-input"><option value="KRW">KRW · ₩</option><option value="MYR">MYR · RM</option></select></div><div class="field"><label for="fxTo">To</label><select id="fxTo" class="tool-input"><option value="MYR">MYR · RM</option><option value="KRW">KRW · ₩</option></select></div></div>
+          <div class="result-big" id="fxResult">Checking rate…</div><div class="meta" id="fxRateNote">Rate source will be shown here.</div>
+          <div class="tool-row" style="margin-top:12px"><button class="btn primary" id="convertBtn">Convert</button><button class="btn" id="refreshRateBtn">Refresh rate</button></div>
+          <div class="field" style="margin-top:14px"><label for="dailyBudget">Daily budget (MYR)</label><input class="tool-input" id="dailyBudget" type="number" min="0" step="10" value="250"></div>
+          <p class="small-text muted" id="dailyBudgetNote">Daily budget is a planning target, not an exchange quote.</p>
+        </div>
+        <div class="tool-card">
+          <div class="eyebrow">04 · Travel day</div><h3>Today's quick checklist</h3><p>Choose a date and tick off the essentials. Your progress saves in this browser.</p>
+          <div class="field"><label for="checkDate">Travel date</label><select id="checkDate" class="tool-input"></select></div>
+          <div class="checklist-day" id="dailyChecklist"></div>
+          <div class="tool-row" style="margin-top:12px"><button class="btn" id="resetDayChecklist">Reset this day</button><button class="btn primary" id="openBookingsBtn">Open bookings</button></div>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="eyebrow">05 · Keep it safe</div><h3>Backups & cross-device sync</h3>
+        <p>Your itinerary currently saves automatically to this browser. To keep the same data on your phone and computer, the site needs a cloud database and secure project configuration; it cannot safely sync across devices using browser storage alone.</p>
+        <div class="sync-note"><strong>For now:</strong> use <em>Export</em> on this page to download a JSON backup, then use <em>Import</em> on another device. Keep the backup somewhere private. Cloud sync is not active until a database service is connected and configured.</div>
+        <div class="tool-row" style="margin-top:12px"><button class="btn primary" id="exportBackupBtn">Export trip backup ↗</button><button class="btn" id="syncGuideBtn">Show cloud sync setup</button></div>
+        <div id="syncGuide" class="sync-note" hidden style="margin-top:12px">Cloud sync next step: create a Firebase project, enable Firestore and Authentication, configure secure access rules, then connect the project credentials to this site. Never publish service-account keys or private credentials in this HTML file. I have not enabled cloud sync here because it requires your own project and access rules.</div>
+      </div>
     </section>
   </main>
   <footer class="footer">MADE FOR THE MEMORIES · Your edits save automatically in this browser · Export a backup before clearing browser data</footer>
@@ -356,11 +456,12 @@ img{display:block;max-width:100%}
 
 <div class="modal-backdrop" id="packingModal" role="dialog" aria-modal="true" aria-labelledby="packingModalTitle">
   <div class="modal">
-    <div class="modal-top"><h3 id="packingModalTitle">Add a packing item</h3><button class="icon-btn" id="closePackingModal" aria-label="Close">✕</button></div>
-    <form id="packingForm"><div class="field"><label for="packingText">Item *</label><input id="packingText" required maxlength="100" placeholder="e.g. Portable charger"></div>
-    <div class="modal-actions"><button type="button" class="btn" id="cancelPacking">Cancel</button><button class="btn primary" type="submit">Add item</button></div></form>
+    <div class="modal-top"><h3 id="packingModalTitle">Add a to-do task</h3><button class="icon-btn" id="closePackingModal" aria-label="Close">✕</button></div>
+    <form id="packingForm"><div class="field"><label for="packingText">Task *</label><input id="packingText" required maxlength="100" placeholder="e.g. Book airport transfer"></div>
+    <div class="modal-actions"><button type="button" class="btn" id="cancelPacking">Cancel</button><button class="btn primary" type="submit">Add task</button></div></form>
   </div>
 </div>
+<button class="btn primary mobile-travel-toggle" id="floatingTravelMode" type="button">☼ Travel mode</button>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -395,6 +496,23 @@ const defaultState=()=>({
   {id:uid(),date:'2027-01-05',time:'08:00',title:'Check out and depart',location:'Incheon International Airport',cost:0,notes:'Confirm departure terminal and travel time.'}
  ],
  expenses:[],
+ todos:[
+  {id:uid(),text:'Check passport validity and entry requirements',done:false},
+  {id:uid(),text:'Confirm flights and save e-tickets offline',done:false},
+  {id:uid(),text:'Confirm all hotel reservations',done:false},
+  {id:uid(),text:'Confirm Vivaldi Park stay, ski rental and transfers',done:false},
+  {id:uid(),text:'Book KTX tickets and check luggage rules',done:false},
+  {id:uid(),text:'Arrange travel insurance',done:false},
+  {id:uid(),text:'Choose eSIM / SIM / roaming plan',done:false},
+  {id:uid(),text:'Install Naver Map, Papago and Kakao T',done:false},
+  {id:uid(),text:'Save Malaysia Embassy and emergency numbers',done:false},
+  {id:uid(),text:'Exchange some MYR to KRW and plan card use',done:false},
+  {id:uid(),text:'Check winter weather and prepare cold-weather clothing',done:false},
+  {id:uid(),text:'Save hotel addresses in Korean and offline maps',done:false},
+  {id:uid(),text:'Check attraction hours and make restaurant reservations',done:false},
+  {id:uid(),text:'Weigh luggage and check airline baggage allowance',done:false}
+ ],
+ foodSpots:[],
  packing:[
   {id:uid(),text:'Passport and travel documents',done:false},{id:uid(),text:'Flight and hotel confirmations',done:false},
   {id:uid(),text:'Travel insurance details',done:false},{id:uid(),text:'Thermal base layers',done:false},
@@ -404,22 +522,41 @@ const defaultState=()=>({
   {id:uid(),text:'Travel adapter',done:false},{id:uid(),text:'Medication and personal essentials',done:false},
   {id:uid(),text:'Small day bag',done:false},{id:uid(),text:'T-money card / transport plan',done:false}
  ],
- bookings:{}
+ bookings:{},dailyChecks:{},fx:{rate:null,date:null},dailyBudget:250
 });
 let state;
 try{const saved=localStorage.getItem(STORAGE_KEY);state=saved?mergeState(defaultState(),JSON.parse(saved)):defaultState()}catch(e){state=defaultState()}
 function mergeState(base,loaded){
  if(!loaded||typeof loaded!=='object')return base;
- return {settings:{...base.settings,...(loaded.settings||{})},activities:Array.isArray(loaded.activities)?loaded.activities:base.activities,expenses:Array.isArray(loaded.expenses)?loaded.expenses:base.expenses,packing:Array.isArray(loaded.packing)?loaded.packing:base.packing,bookings:{...base.bookings,...(loaded.bookings||{})}};
+ return {settings:{...base.settings,...(loaded.settings||{})},activities:Array.isArray(loaded.activities)?loaded.activities:base.activities,expenses:Array.isArray(loaded.expenses)?loaded.expenses:base.expenses,todos:Array.isArray(loaded.todos)?loaded.todos:base.todos,foodSpots:Array.isArray(loaded.foodSpots)?loaded.foodSpots:base.foodSpots,packing:Array.isArray(loaded.packing)?loaded.packing:base.packing,bookings:{...base.bookings,...(loaded.bookings||{})},dailyChecks:{...(loaded.dailyChecks||{})},fx:{...(loaded.fx||{})},dailyBudget:loaded.dailyBudget??base.dailyBudget};
 }
 let selectedDate=START,toastTimer;
 function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){showToast('Could not save locally. Export a backup.')}renderStats()}
 function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2400)}
 function openModal(id){$(id).classList.add('open');const first=$(id).querySelector('input:not([type=hidden]),select,textarea');if(first)setTimeout(()=>first.focus(),50)}
 function closeModal(id){$(id).classList.remove('open')}
-function switchTab(tab){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+tab));if(tab==='itinerary')renderItinerary();if(tab==='budget')renderBudget();if(tab==='packing')renderPacking();window.scrollTo({top:0,behavior:'smooth'})}
+function switchTab(tab){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+tab));if(tab==='itinerary')renderItinerary();if(tab==='budget')renderBudget();if(tab==='packing')renderPacking();if(tab==='gallery')renderFoodSpots();if(tab==='tools'){fillDailyDateSelect();convertFx();}window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
 document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.goto)));
+async function loadWeather(){
+ const places=[{name:'Seoul',lat:37.5665,lon:126.9780},{name:'Vivaldi Park',lat:37.6450,lon:127.6810},{name:'Busan',lat:35.1796,lon:129.0756}];
+ try{const results=await Promise.all(places.map(async p=>{const url=`https://api.open-meteo.com/v1/forecast?latitude=${p.lat}&longitude=${p.lon}&current=temperature_2m,precipitation,snowfall&daily=temperature_2m_min,temperature_2m_max,snowfall_sum&temperature_unit=celsius&forecast_days=7&timezone=Asia%2FSeoul`;const r=await fetch(url);if(!r.ok)throw new Error('Weather unavailable');return {place:p,data:await r.json()}}));
+ $('weatherLive').innerHTML=results.map(({place:p,data:d})=>{const c=d.current||{},daily=d.daily||{},snow=Array.isArray(daily.snowfall_sum)?Math.max(0,...daily.snowfall_sum):0;return `<div class="weather-place"><strong>${p.name}</strong><div class="result-big" style="font-size:25px">${Number.isFinite(c.temperature_2m)?Math.round(c.temperature_2m)+'°C':'—'}</div><small>Now · next 7-day snow total up to ${snow.toFixed(1)} cm</small><div class="meta" style="margin-top:5px">Forecast only; mountain conditions can vary.</div></div>`}).join('');
+ $('weatherStatus').textContent='Near-term conditions loaded from Open-Meteo. This is not a forecast for your late-December travel dates; check again closer to departure.';
+ }catch(e){$('weatherStatus').textContent='Live weather could not load. Check your internet connection, or use the forecast links below. Late-December forecasts are not reliable this far ahead.'}
+}
+function renderCountdown(){
+ const start=new Date(START+'T00:00:00');const now=new Date();const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());const days=Math.ceil((start-today)/86400000);
+ $('countdownValue').textContent=days>0?`${days} days to go`:days===0?'Your trip starts today!':'Trip dates have passed';
+ $('countdownNote').textContent=days>0?'Until 23 December 2026':days===0?'Have a wonderful trip.':'Update your dates for your next adventure.';
+}
+function fillDailyDateSelect(){const sel=$('checkDate');sel.innerHTML=dateList().map(d=>`<option value="${d}">${fmtDate(d,{weekday:'short',day:'numeric',month:'short'})}</option>`).join('');sel.value=selectedDate;renderDailyChecklist()}
+const DAILY_ITEMS=[['passport','Passport / ID'],['tickets','Tickets & booking confirmations'],['wallet','Wallet, cards & cash'],['phone','Phone & power bank'],['transport','Transport plan / T-money'],['layers','Warm layers & gloves'],['water','Water & any essentials'],['checkin','Check next booking / check-in']];
+function renderDailyChecklist(){const d=$('checkDate').value||selectedDate;const checks=state.dailyChecks[d]||{};$('dailyChecklist').innerHTML=DAILY_ITEMS.map(([id,label])=>`<label class="day-check"><input type="checkbox" data-daily-check="${id}" ${checks[id]?'checked':''}> <span>${label}</span></label>`).join('');$('dailyChecklist').querySelectorAll('[data-daily-check]').forEach(c=>c.addEventListener('change',()=>{const date=$('checkDate').value;state.dailyChecks[date]=state.dailyChecks[date]||{};state.dailyChecks[date][c.dataset.dailyCheck]=c.checked;persist()}))}
+let liveRate=null;
+async function refreshFxRate(){ $('fxRateNote').textContent='Fetching indicative mid-market rate…';try{const from=$('fxFrom').value,to=$('fxTo').value;const base=from;const response=await fetch(`https://open.er-api.com/v6/latest/${encodeURIComponent(from)}`);if(!response.ok)throw new Error('Rate unavailable');const data=await response.json();if(data.result!=='success'||!data.rates||!data.rates[to])throw new Error('Rate unavailable');liveRate=Number(data.rates[to]);const date=(data.time_last_update_utc||'').slice(0,16)||'latest available';state.fx={rate:liveRate,date,from,to};persist();convertFx();$('fxRateNote').textContent=`Indicative rate updated ${date}: 1 ${from} = ${liveRate.toLocaleString('en-MY',{maximumFractionDigits:6})} ${to}. Money changer rates/fees differ.`}catch(e){liveRate=null;$('fxRateNote').textContent='Could not load a live rate. Check your internet connection; the converter will still use a saved rate if available.';if(state.fx&&state.fx.rate){liveRate=Number(state.fx.rate);convertFx()}}}
+function convertFx(){const amount=Math.max(0,Number($('fxAmount').value)||0),from=$('fxFrom').value,to=$('fxTo').value;if(from===to){$('fxResult').textContent=amount.toLocaleString('en-MY',{maximumFractionDigits:2})+' '+to;return}let rate=liveRate;if(!rate&&state.fx&&state.fx.rate&&state.fx.from===from&&state.fx.to===to)rate=Number(state.fx.rate);if(!rate){$('fxResult').textContent='Rate not loaded';return}$('fxResult').textContent=(amount*rate).toLocaleString('en-MY',{maximumFractionDigits:2})+' '+to}
+function setTravelMode(){document.body.classList.toggle('travel-mode');const on=document.body.classList.contains('travel-mode');$('travelModeBtn').textContent=on?'☼ Exit travel mode':'☼ Toggle travel mode';$('floatingTravelMode').textContent=on?'Exit travel mode':'☼ Travel mode';}
 function renderDateSelect(){
  const sel=$('daySelect');sel.innerHTML=dateList().map(d=>`<option value="${d}">${fmtDate(d,{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</option>`).join('');sel.value=selectedDate;
 }
@@ -472,20 +609,27 @@ function editExpense(id){const e=state.expenses.find(x=>x.id===id);if(!e)return;
 $('addExpenseBtn').addEventListener('click',newExpense);
 $('expenseForm').addEventListener('submit',e=>{e.preventDefault();const id=$('expenseId').value,item={id:id||uid(),title:$('expenseTitle').value.trim(),amount:Math.max(0,Number($('expenseAmount').value)||0),category:$('expenseCategory').value,date:$('expenseDate').value,notes:$('expenseNotes').value.trim()};if(!item.title)return;if(id)state.expenses=state.expenses.map(x=>x.id===id?item:x);else state.expenses.push(item);persist();renderBudget();closeModal('expenseModal');showToast(id?'Expense updated.':'Expense added.')});
 function renderPacking(){
- const list=$('packingList'),done=state.packing.filter(p=>p.done).length,total=state.packing.length,pct=total?Math.round(done/total*100):0;
- $('packingCount').textContent=`${total} items`;$('packingProgressText').textContent=`${done} of ${total} packed`;$('statPacking').textContent=pct+'%';$('packingBar').style.width=pct+'%';
- if(!total){list.innerHTML='<div class="empty">Your packing list is clear. Add what you need to bring.</div>';return}
- list.innerHTML=state.packing.map(p=>`<div class="check-item ${p.done?'done':''}"><input type="checkbox" data-pack-check="${esc(p.id)}" ${p.done?'checked':''} aria-label="Mark ${esc(p.text)} packed"><span>${esc(p.text)}</span><button class="icon-btn" data-pack-delete="${esc(p.id)}" aria-label="Delete ${esc(p.text)}">×</button></div>`).join('');
- list.querySelectorAll('[data-pack-check]').forEach(c=>c.addEventListener('change',()=>{const p=state.packing.find(x=>x.id===c.dataset.packCheck);if(p)p.done=c.checked;persist();renderPacking()}));
- list.querySelectorAll('[data-pack-delete]').forEach(b=>b.addEventListener('click',()=>{state.packing=state.packing.filter(p=>p.id!==b.dataset.packDelete);persist();renderPacking()}));
+ const list=$('packingList'),done=state.todos.filter(p=>p.done).length,total=state.todos.length,pct=total?Math.round(done/total*100):0;
+ $('packingCount').textContent=`${total} tasks`;$('packingProgressText').textContent=`${done} of ${total} completed`;$('statPacking').textContent=pct+'%';$('packingBar').style.width=pct+'%';
+ if(!total){list.innerHTML='<div class="empty">Your to-do list is clear. Add a task you need to complete.</div>';return}
+ list.innerHTML=state.todos.map(p=>`<div class="check-item ${p.done?'done':''}"><input type="checkbox" data-pack-check="${esc(p.id)}" ${p.done?'checked':''} aria-label="Mark ${esc(p.text)} complete"><span>${esc(p.text)}</span><button class="icon-btn" data-pack-delete="${esc(p.id)}" aria-label="Delete ${esc(p.text)}">×</button></div>`).join('');
+ list.querySelectorAll('[data-pack-check]').forEach(c=>c.addEventListener('change',()=>{const p=state.todos.find(x=>x.id===c.dataset.packCheck);if(p)p.done=c.checked;persist();renderPacking()}));
+ list.querySelectorAll('[data-pack-delete]').forEach(b=>b.addEventListener('click',()=>{state.todos=state.todos.filter(p=>p.id!==b.dataset.packDelete);persist();renderPacking()}));
 }
 $('addPackingBtn').addEventListener('click',()=>{$('packingForm').reset();openModal('packingModal')});
-$('packingForm').addEventListener('submit',e=>{e.preventDefault();const text=$('packingText').value.trim();if(text){state.packing.push({id:uid(),text,done:false});persist();renderPacking();closeModal('packingModal');showToast('Packing item added.')}});
-$('clearPackedBtn').addEventListener('click',()=>{const n=state.packing.filter(p=>p.done).length;if(n&&confirm(`Remove ${n} packed item(s) from the list?`)){state.packing=state.packing.filter(p=>!p.done);persist();renderPacking();showToast('Packed items removed.')}});
+$('packingForm').addEventListener('submit',e=>{e.preventDefault();const text=$('packingText').value.trim();if(text){state.todos.push({id:uid(),text,done:false});persist();renderPacking();closeModal('packingModal');showToast('To-do task added.')}});
+$('clearPackedBtn').addEventListener('click',()=>{const n=state.todos.filter(p=>p.done).length;if(n&&confirm(`Remove ${n} completed task(s) from the list?`)){state.todos=state.todos.filter(p=>!p.done);persist();renderPacking();showToast('Completed tasks removed.')}});
+function renderFoodSpots(){
+ const list=$('savedFoodSpots');if(!list)return;
+ if(!state.foodSpots||!state.foodSpots.length){list.innerHTML='<div class="empty">Your saved food spots will appear here. Add one above when you find somewhere you want to try.</div>';return}
+ list.innerHTML=state.foodSpots.map(f=>`<div class="expense"><div><strong>${esc(f.name)}</strong><div class="meta">${esc(f.area||'Area not specified')}${f.notes?' · '+esc(f.notes):''}</div>${f.map?`<div><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(f.name+' '+(f.area||''))}" target="_blank" rel="noopener">Open in Google Maps ↗</a></div>`:''}</div><button class="btn small danger" data-food-delete="${esc(f.id)}">Delete</button></div>`).join('');
+ list.querySelectorAll('[data-food-delete]').forEach(b=>b.addEventListener('click',()=>{state.foodSpots=state.foodSpots.filter(f=>f.id!==b.dataset.foodDelete);persist();renderFoodSpots()}));
+}
+$('addFoodSpotBtn').addEventListener('click',()=>{const name=$('foodSpotName').value.trim();if(!name){$('foodSpotName').focus();return}state.foodSpots.push({id:uid(),name,area:$('foodSpotArea').value.trim(),notes:$('foodSpotNotes').value.trim(),map:true});$('foodSpotName').value='';$('foodSpotArea').value='';$('foodSpotNotes').value='';persist();renderFoodSpots();showToast('Food spot saved.')});
 function renderStats(){
  const spent=state.expenses.reduce((s,e)=>s+Number(e.amount||0),0),budget=Math.max(0,Number(state.settings.budget)||0);
  $('statBudget').textContent=money(budget);$('statSpent').textContent=money(spent);$('statSpentNote').textContent=budget?`${Math.round(spent/budget*100)}% of planned budget`:'Set a budget to compare';
- const done=state.packing.filter(p=>p.done).length;$('statPacking').textContent=(state.packing.length?Math.round(done/state.packing.length*100):0)+'%';$('packingBar').style.width=(state.packing.length?done/state.packing.length*100:0)+'%';
+ const done=state.todos.filter(p=>p.done).length;$('statPacking').textContent=(state.todos.length?Math.round(done/state.todos.length*100):0)+'%';$('packingBar').style.width=(state.todos.length?done/state.todos.length*100:0)+'%';
 }
 function loadSettings(){
  $('tripName').value=state.settings.name||'';$('budgetInput').value=state.settings.budget??5000;$('currency').value=state.settings.currency||'MYR';
@@ -510,7 +654,15 @@ $('importInput').addEventListener('change',async e=>{
 [['closeActivityModal','activityModal'],['cancelActivity','activityModal'],['closeExpenseModal','expenseModal'],['cancelExpense','expenseModal'],['closePackingModal','packingModal'],['cancelPacking','packingModal']].forEach(([btn,modal])=>$(btn).addEventListener('click',()=>closeModal(modal)));
 document.querySelectorAll('.modal-backdrop').forEach(back=>back.addEventListener('click',e=>{if(e.target===back)back.classList.remove('open')}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-backdrop.open').forEach(m=>m.classList.remove('open'))});
-renderDateSelect();loadSettings();renderItinerary();renderBudget();renderPacking();renderStats();
+$('mapSearchBtn').addEventListener('click',()=>{const q=$('mapSearch').value.trim();if(!q){$('mapSearch').focus();return}window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q),'_blank','noopener')});
+$('mapSearch').addEventListener('keydown',e=>{if(e.key==='Enter')$('mapSearchBtn').click()});
+$('routeBtn').addEventListener('click',()=>window.open('https://www.google.com/maps/dir/?api=1&origin=Seoul+South+Korea&destination=Busan+South+Korea&travelmode=transit','_blank','noopener'));
+$('travelModeBtn').addEventListener('click',setTravelMode);$('floatingTravelMode').addEventListener('click',setTravelMode);
+$('fxAmount').addEventListener('input',convertFx);$('fxFrom').addEventListener('change',()=>{liveRate=null;refreshFxRate()});$('fxTo').addEventListener('change',()=>{liveRate=null;refreshFxRate()});$('convertBtn').addEventListener('click',convertFx);$('refreshRateBtn').addEventListener('click',refreshFxRate);
+$('dailyBudget').value=state.dailyBudget??250;$('dailyBudget').addEventListener('change',()=>{state.dailyBudget=Math.max(0,Number($('dailyBudget').value)||0);persist();$('dailyBudgetNote').textContent=`Planning target: RM ${state.dailyBudget.toLocaleString('en-MY',{maximumFractionDigits:2})} per day. This is separate from exchange rates.`});
+$('checkDate').addEventListener('change',renderDailyChecklist);$('resetDayChecklist').addEventListener('click',()=>{const d=$('checkDate').value;if(confirm('Reset this day’s checklist?')){delete state.dailyChecks[d];persist();renderDailyChecklist()}});
+$('openBookingsBtn').addEventListener('click',()=>switchTab('bookings'));$('exportBackupBtn').addEventListener('click',()=>$('exportBtn').click());$('syncGuideBtn').addEventListener('click',()=>{$('syncGuide').hidden=!$('syncGuide').hidden});
+renderDateSelect();loadSettings();renderItinerary();renderBudget();renderPacking();renderFoodSpots();renderStats();renderCountdown();fillDailyDateSelect();refreshFxRate();loadWeather();
 })();
 </script>
 </body>
