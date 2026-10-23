@@ -409,14 +409,17 @@ body.travel-mode .topbar .brand p,body.travel-mode .hero-photo,body.travel-mode 
       </div>
       <div class="tool-card">
         <div class="eyebrow">05 · Keep it safe</div><h3>Backups & cross-device sync</h3>
-        <p>Your itinerary currently saves automatically to this browser. To keep the same data on your phone and computer, the site needs a cloud database and secure project configuration; it cannot safely sync across devices using browser storage alone.</p>
-        <div class="sync-note"><strong>For now:</strong> use <em>Export</em> on this page to download a JSON backup, then use <em>Import</em> on another device. Keep the backup somewhere private. Cloud sync is not active until a database service is connected and configured.</div>
-        <div class="tool-row" style="margin-top:12px"><button class="btn primary" id="exportBackupBtn">Export trip backup ↗</button><button class="btn" id="syncGuideBtn">Show cloud sync setup</button></div>
-        <div id="syncGuide" class="sync-note" hidden style="margin-top:12px">Cloud sync next step: create a Firebase project, enable Firestore and Authentication, configure secure access rules, then connect the project credentials to this site. Never publish service-account keys or private credentials in this HTML file. I have not enabled cloud sync here because it requires your own project and access rules.</div>
+        <p>Sign in with the same email on your computer and phone to access the same itinerary. Your edits continue saving locally, and cloud sync will start only after you sign in and choose how to combine your existing data.</p>
+        <div class="sync-note" id="cloudStatus" role="status" aria-live="polite"><strong>Cloud sync not connected.</strong> Export a backup before signing in for the first time.</div>
+        <div class="field" style="margin-top:12px"><label for="cloudEmail">Email address</label><input class="tool-input" id="cloudEmail" type="email" autocomplete="email" placeholder="you@example.com"></div>
+        <div class="field"><label for="cloudPassword">Password</label><input class="tool-input" id="cloudPassword" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters"></div>
+        <div class="tool-row" style="margin-top:12px"><button class="btn primary" id="cloudSignInBtn">Sign in</button><button class="btn" id="cloudSignUpBtn">Create account</button></div>
+        <div class="tool-row" style="margin-top:8px"><button class="btn" id="cloudSyncNowBtn" disabled>Sync now</button><button class="btn" id="cloudSignOutBtn" disabled>Sign out</button><button class="btn" id="exportBackupBtn">Export trip backup ↗</button></div>
+        <p class="small-text muted" style="margin-top:10px">Use the same account on each device. Do not use a shared/public computer for sign-in. If a cloud copy already exists, the site will ask before replacing local data. Cloud syncing requires an internet connection; keep periodic JSON backups too.</p>
       </div>
     </section>
   </main>
-  <footer class="footer">MADE FOR THE MEMORIES · Your edits save automatically in this browser · Export a backup before clearing browser data</footer>
+  <footer class="footer">MADE FOR THE MEMORIES · Local autosave plus optional Supabase cloud sync · Keep a backup</footer>
 </div>
 
 <div class="modal-backdrop" id="activityModal" role="dialog" aria-modal="true" aria-labelledby="activityModalTitle">
@@ -464,12 +467,18 @@ body.travel-mode .topbar .brand p,body.travel-mode .hero-photo,body.travel-mode 
 <button class="btn primary mobile-travel-toggle" id="floatingTravelMode" type="button">☼ Travel mode</button>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
 'use strict';
 const STORAGE_KEY='myTravelJournalSouthKorea_v1';
 const START='2026-12-23', END='2027-01-05';
 const CURRENCY={MYR:'RM',KRW:'₩'};
+// Public browser configuration. Security is enforced by Supabase Auth + Row Level Security.
+const SUPABASE_URL='https://aexqeywtmuxyzdwpmgmw.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_QYizsB0d2xeQYPXBmTepDg_5R-jKbH3';
+const cloudClient=(window.supabase&&window.supabase.createClient)?window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}}):null;
+let cloudUser=null,cloudSyncReady=false,cloudSaveTimer=null,cloudOperation=false;
 const $=id=>document.getElementById(id);
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const dateList=()=>{const out=[];let d=new Date(START+'T12:00:00'),end=new Date(END+'T12:00:00');while(d<=end){out.push(localISO(d));d.setDate(d.getDate()+1)}return out};
@@ -531,7 +540,19 @@ function mergeState(base,loaded){
  return {settings:{...base.settings,...(loaded.settings||{})},activities:Array.isArray(loaded.activities)?loaded.activities:base.activities,expenses:Array.isArray(loaded.expenses)?loaded.expenses:base.expenses,todos:Array.isArray(loaded.todos)?loaded.todos:base.todos,foodSpots:Array.isArray(loaded.foodSpots)?loaded.foodSpots:base.foodSpots,packing:Array.isArray(loaded.packing)?loaded.packing:base.packing,bookings:{...base.bookings,...(loaded.bookings||{})},dailyChecks:{...(loaded.dailyChecks||{})},fx:{...(loaded.fx||{})},dailyBudget:loaded.dailyBudget??base.dailyBudget};
 }
 let selectedDate=START,toastTimer;
-function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){showToast('Could not save locally. Export a backup.')}renderStats()}
+function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){showToast('Could not save locally. Export a backup.')}renderStats();if(cloudSyncReady&&cloudUser)scheduleCloudSave()}
+function setCloudStatus(message){const el=$('cloudStatus');if(el)el.innerHTML=message}
+function setCloudButtons(signedIn){$('cloudSignInBtn').disabled=!!signedIn;$('cloudSignUpBtn').disabled=!!signedIn;$('cloudSyncNowBtn').disabled=!signedIn;$('cloudSignOutBtn').disabled=!signedIn}
+function scheduleCloudSave(){clearTimeout(cloudSaveTimer);cloudSaveTimer=setTimeout(()=>saveCloudState(false),900)}
+async function saveCloudState(showMessage=true){if(!cloudClient||!cloudUser)return;clearTimeout(cloudSaveTimer);try{const {error}=await cloudClient.from('travel_journal').upsert({user_id:cloudUser.id,trip_data:state,updated_at:new Date().toISOString()},{onConflict:'user_id'});if(error)throw error;localStorage.setItem('travelJournalCloudSynced_'+cloudUser.id,'1');if(showMessage){setCloudStatus('<strong>Synced successfully.</strong> Your latest trip data is saved to your cloud account.');showToast('Trip synced to cloud.')}else setCloudStatus('<strong>Cloud sync is on.</strong> Your changes are saved on this device and synced when online.')}catch(err){console.error('Cloud save failed',err);setCloudStatus('<strong>Cloud sync failed.</strong> Your data is still saved locally. Check your connection and database settings, then try Sync now.');if(showMessage)showToast('Cloud sync failed; local data is safe.')}}
+function renderAllFromState(){renderDateSelect();loadSettings();renderItinerary();renderBudget();renderPacking();renderFoodSpots();renderStats();renderCountdown();fillDailyDateSelect();renderDailyChecklist();$('dailyBudget').value=state.dailyBudget??250;convertFx()}
+async function loadCloudState(){if(!cloudClient||!cloudUser)return;cloudSyncReady=false;try{const {data,error}=await cloudClient.from('travel_journal').select('trip_data,updated_at').eq('user_id',cloudUser.id).maybeSingle();if(error)throw error;
+ if(data&&data.trip_data){const hasLocal=!!localStorage.getItem(STORAGE_KEY),alreadyLinked=localStorage.getItem('travelJournalCloudSynced_'+cloudUser.id)==='1';let choice='cloud';if(hasLocal&&!alreadyLinked){choice=confirm('A cloud itinerary already exists for this account. Click OK to load the cloud copy onto this device, or Cancel to keep this device’s data and upload it to the cloud. Export a backup first if unsure.')?'cloud':'local'}if(choice==='cloud'){state=mergeState(defaultState(),data.trip_data);localStorage.setItem(STORAGE_KEY,JSON.stringify(state));renderAllFromState()}else{await saveCloudState(false)}localStorage.setItem('travelJournalCloudSynced_'+cloudUser.id,'1');cloudSyncReady=true;setCloudStatus('<strong>Signed in and synced.</strong> Using your cloud itinerary. Last cloud update: '+new Date(data.updated_at).toLocaleString());}
+ else {const shouldUpload=confirm('No cloud itinerary exists for this account yet. Upload the itinerary currently on this device to your cloud account? Choose Cancel to stay signed in without syncing yet.');if(shouldUpload){cloudSyncReady=true;await saveCloudState(true)}else{cloudSyncReady=false;setCloudStatus('<strong>Signed in, sync paused.</strong> Your current device data has not been uploaded. Export a backup before choosing to sync later.')}}
+ }catch(err){console.error('Cloud load failed',err);cloudSyncReady=false;setCloudStatus('<strong>Could not load cloud data.</strong> Your local itinerary has not been replaced. Check the table and security policies, then try signing in again.')}}
+async function onCloudSignIn(){if(!cloudClient){setCloudStatus('<strong>Connection library failed to load.</strong> Check your internet connection and refresh the page.');return}const email=$('cloudEmail').value.trim(),password=$('cloudPassword').value;if(!email||!password){showToast('Enter your email and password first.');return}try{$('cloudSignInBtn').disabled=true;const {data,error}=await cloudClient.auth.signInWithPassword({email,password});if(error)throw error;cloudUser=data.user;setCloudButtons(true);await loadCloudState()}catch(err){console.error(err);setCloudStatus('<strong>Sign-in failed.</strong> '+esc(err.message||'Check your email and password.'));setCloudButtons(false)}}
+async function onCloudSignUp(){if(!cloudClient){setCloudStatus('<strong>Connection library failed to load.</strong> Check your internet connection and refresh the page.');return}const email=$('cloudEmail').value.trim(),password=$('cloudPassword').value;if(!email||!password){showToast('Enter your email and password first.');return}if(password.length<8){showToast('Use a password with at least 8 characters.');return}try{$('cloudSignUpBtn').disabled=true;const {data,error}=await cloudClient.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});if(error)throw error;if(data.session){cloudUser=data.user;setCloudButtons(true);await loadCloudState()}else{setCloudStatus('<strong>Check your email to confirm your account.</strong> After confirming, return here and sign in with the same email and password.');setCloudButtons(false)}}catch(err){console.error(err);setCloudStatus('<strong>Account creation failed.</strong> '+esc(err.message||'Please try again.'));setCloudButtons(false)}}
+async function onCloudSignOut(){if(!cloudClient)return;cloudSyncReady=false;const {error}=await cloudClient.auth.signOut();if(error){setCloudStatus('<strong>Sign-out failed.</strong> '+esc(error.message));return}cloudUser=null;setCloudButtons(false);setCloudStatus('<strong>Signed out.</strong> Your itinerary remains saved in this browser.')}
 function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2400)}
 function openModal(id){$(id).classList.add('open');const first=$(id).querySelector('input:not([type=hidden]),select,textarea');if(first)setTimeout(()=>first.focus(),50)}
 function closeModal(id){$(id).classList.remove('open')}
@@ -661,7 +682,10 @@ $('travelModeBtn').addEventListener('click',setTravelMode);$('floatingTravelMode
 $('fxAmount').addEventListener('input',convertFx);$('fxFrom').addEventListener('change',()=>{liveRate=null;refreshFxRate()});$('fxTo').addEventListener('change',()=>{liveRate=null;refreshFxRate()});$('convertBtn').addEventListener('click',convertFx);$('refreshRateBtn').addEventListener('click',refreshFxRate);
 $('dailyBudget').value=state.dailyBudget??250;$('dailyBudget').addEventListener('change',()=>{state.dailyBudget=Math.max(0,Number($('dailyBudget').value)||0);persist();$('dailyBudgetNote').textContent=`Planning target: RM ${state.dailyBudget.toLocaleString('en-MY',{maximumFractionDigits:2})} per day. This is separate from exchange rates.`});
 $('checkDate').addEventListener('change',renderDailyChecklist);$('resetDayChecklist').addEventListener('click',()=>{const d=$('checkDate').value;if(confirm('Reset this day’s checklist?')){delete state.dailyChecks[d];persist();renderDailyChecklist()}});
-$('openBookingsBtn').addEventListener('click',()=>switchTab('bookings'));$('exportBackupBtn').addEventListener('click',()=>$('exportBtn').click());$('syncGuideBtn').addEventListener('click',()=>{$('syncGuide').hidden=!$('syncGuide').hidden});
+$('openBookingsBtn').addEventListener('click',()=>switchTab('bookings'));$('exportBackupBtn').addEventListener('click',()=>$('exportBtn').click());
+$('cloudSignInBtn').addEventListener('click',onCloudSignIn);$('cloudSignUpBtn').addEventListener('click',onCloudSignUp);$('cloudSignOutBtn').addEventListener('click',onCloudSignOut);$('cloudSyncNowBtn').addEventListener('click',()=>saveCloudState(true));
+$('cloudPassword').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();onCloudSignIn()}});
+if(cloudClient){cloudClient.auth.getSession().then(async({data,error})=>{if(error)throw error;if(data.session){cloudUser=data.session.user;setCloudButtons(true);await loadCloudState()}else{setCloudButtons(false);setCloudStatus('<strong>Ready to connect.</strong> Create an account or sign in to enable cloud sync. Export a backup first.')}}).catch(err=>{console.error(err);setCloudStatus('<strong>Could not check sign-in status.</strong> Refresh the page and try again.')})}else{setCloudStatus('<strong>Could not load Supabase client.</strong> Refresh the page and check your internet connection.')}
 renderDateSelect();loadSettings();renderItinerary();renderBudget();renderPacking();renderFoodSpots();renderStats();renderCountdown();fillDailyDateSelect();refreshFxRate();loadWeather();
 })();
 </script>
