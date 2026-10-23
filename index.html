@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f5f1e8">
+<title>My Travel Journal — South Korea</title>
+<style>
+:root{
+  --cream:#f7f4ed;--paper:#fffdf8;--sand:#e8dfd0;--sage:#a9b7a0;--sage-dark:#596b56;
+  --forest:#34483a;--brown:#765d4b;--ink:#292c25;--muted:#77786e;--line:#e8e3d8;
+  --rose:#d9a89d;--gold:#d9b66f;--shadow:0 12px 34px rgba(67,57,43,.08);
+  --radius:22px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-size:14px;line-height:1.55}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{color:inherit}
+img{display:block;max-width:100%}
+.app{max-width:1440px;margin:0 auto;padding:22px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:43px;height:43px;border-radius:15px;background:var(--forest);color:#fff;display:grid;place-items:center;font-family:Georgia,serif;font-size:23px}
+.brand h1{font-family:Georgia,"Times New Roman",serif;font-size:21px;font-weight:500;letter-spacing:-.5px;margin:0}
+.brand p{margin:1px 0 0;color:var(--muted);font-size:11px;letter-spacing:1.5px;text-transform:uppercase}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);border-radius:999px;background:var(--paper);padding:10px 15px;color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:.2s;text-decoration:none}
+.btn:hover{transform:translateY(-1px);box-shadow:0 5px 15px #51452b12}
+.btn.primary{background:var(--forest);color:#fff;border-color:var(--forest)}
+.btn.soft{background:#e7ede3;border-color:#e7ede3;color:var(--forest)}
+.btn.danger{color:#9b5148;background:#fff8f6;border-color:#eed9d5}
+.btn.small{padding:7px 11px;font-size:12px}
+.icon-btn{border:0;background:transparent;color:var(--muted);padding:6px;border-radius:9px}
+.icon-btn:hover{background:#f0ece2;color:var(--ink)}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;min-height:330px;background:#e9e0d2;border-radius:30px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:22px}
+.hero-copy{padding:clamp(26px,5vw,58px);display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--sage-dark);font-weight:700}
+.hero h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(36px,5vw,61px);line-height:1.02;font-weight:400;letter-spacing:-1.8px;margin:13px 0}
+.hero h2 em{font-weight:400;color:var(--brown)}
+.hero-copy>p{color:#6d685d;max-width:450px;margin:0 0 22px}
+.hero-meta{display:flex;gap:20px;flex-wrap:wrap;color:#5c5d53;font-size:12px}
+.hero-meta span{display:flex;align-items:center;gap:6px}
+.hero-photo{position:relative;min-height:280px;background:#d8d1c3}
+.hero-photo img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.photo-caption{position:absolute;bottom:17px;right:17px;background:#fffdf0e8;padding:9px 13px;border-radius:12px;font-family:Georgia,serif;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:22px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:17px 19px;min-width:0}
+.stat-label{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:1.2px}
+.stat-value{font-family:Georgia,serif;font-size:27px;margin:6px 0 2px;letter-spacing:-.5px;overflow-wrap:anywhere}
+.stat-note{font-size:11px;color:var(--muted)}
+.progress{height:6px;background:#ebe8df;border-radius:20px;overflow:hidden;margin-top:11px}
+.progress span{height:100%;display:block;background:var(--sage-dark);border-radius:20px;width:0;transition:width .3s}
+.nav{display:flex;gap:6px;overflow:auto;padding:6px;background:#ebe7dd;border-radius:15px;margin-bottom:22px;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav button{border:0;background:transparent;color:#6f7066;border-radius:11px;padding:11px 16px;white-space:nowrap}
+.nav button.active{background:var(--paper);color:var(--forest);box-shadow:0 3px 10px #554a3310;font-weight:650}
+.panel{display:none;animation:fade .25s ease}
+.panel.active{display:block}
+@keyframes fade{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:8px 0 17px}
+.section-head h2{font-family:Georgia,serif;font-size:30px;font-weight:400;letter-spacing:-.5px;margin:0}
+.section-head p{margin:3px 0 0;color:var(--muted)}
+.layout-two{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,.8fr);gap:18px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:20px;min-width:0}
+.card h3{font-family:Georgia,serif;font-size:20px;font-weight:400;margin:0 0 13px}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.card-head h3{margin:0}
+.muted{color:var(--muted)}
+.small-text{font-size:12px}
+.destination-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.destination{border-radius:21px;overflow:hidden;background:var(--paper);border:1px solid var(--line);box-shadow:0 5px 20px #473d2c08}
+.destination-photo{height:190px;position:relative;background:#ddd}
+.destination-photo img{width:100%;height:100%;object-fit:cover}
+.destination-photo span{position:absolute;left:12px;top:12px;background:#fffdf0e8;padding:6px 10px;border-radius:999px;font-size:11px}
+.destination-body{padding:16px}
+.destination-body h3{font-family:Georgia,serif;font-size:22px;font-weight:400;margin:0}
+.destination-body p{color:var(--muted);font-size:12px;margin:6px 0 12px}
+.pill{display:inline-block;background:#e9eee5;color:var(--forest);border-radius:999px;padding:5px 9px;font-size:11px;margin:0 4px 4px 0}
+.day-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:15px}
+.day-toolbar select,.field input,.field select,.field textarea,.date-control{width:100%;border:1px solid #dfdace;background:#fffefa;border-radius:11px;padding:11px 12px;color:var(--ink);outline:none}
+.day-toolbar select:focus,.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--sage-dark);box-shadow:0 0 0 3px #a9b7a026}
+.day-toolbar select{width:auto;min-width:230px}
+.day-label{font-family:Georgia,serif;font-size:20px}
+.timeline{display:flex;flex-direction:column;gap:11px}
+.activity{display:grid;grid-template-columns:65px minmax(0,1fr) auto;gap:13px;align-items:start;background:#fffefa;border:1px solid var(--line);border-radius:16px;padding:15px}
+.activity-time{font-size:12px;font-weight:700;color:var(--sage-dark);padding-top:3px}
+.activity h4{font-size:15px;margin:0 0 4px;font-weight:650}
+.activity p{margin:3px 0;color:var(--muted);font-size:12px}
+.activity-note{color:#77766d;font-size:12px;margin-top:7px}
+.activity-cost{font-size:12px;color:var(--brown);font-weight:700;margin-top:5px}
+.activity-actions{display:flex;gap:2px}
+.activity-actions button{font-size:12px}
+.empty{padding:32px 15px;text-align:center;color:var(--muted);border:1px dashed #d9d2c4;border-radius:16px}
+.day-summary{display:flex;gap:15px;flex-wrap:wrap;margin-top:15px;padding:13px 15px;background:#f1f2eb;border-radius:13px;font-size:12px;color:#5c6857}
+.expense-list{display:flex;flex-direction:column;gap:9px}
+.expense{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.expense:last-child{border-bottom:0}
+.expense strong{font-size:13px}
+.expense .meta{font-size:11px;color:var(--muted);margin-top:3px}
+.expense-amount{white-space:nowrap;font-weight:650}
+.budget-big{font-family:Georgia,serif;font-size:34px;letter-spacing:-.5px;margin:7px 0}
+.budget-line{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted)}
+.category-bars{display:flex;flex-direction:column;gap:13px;margin-top:20px}
+.category-row .cat-top{display:flex;justify-content:space-between;gap:10px;font-size:12px;margin-bottom:6px}
+.category-row .progress{margin:0;height:7px}
+.checklist{display:flex;flex-direction:column;gap:9px}
+.check-item{display:flex;align-items:center;gap:11px;padding:12px;background:#fffefa;border:1px solid var(--line);border-radius:13px}
+.check-item input{accent-color:var(--sage-dark);width:17px;height:17px}
+.check-item.done span{text-decoration:line-through;color:#99998e}
+.check-item button{margin-left:auto}
+.check-progress{display:flex;justify-content:space-between;align-items:center;margin:12px 0 16px;color:var(--muted);font-size:12px}
+.booking-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.booking-card{background:#fffefa;border:1px solid var(--line);border-radius:16px;padding:17px}
+.booking-card h4{margin:0 0 12px;font-family:Georgia,serif;font-weight:400;font-size:19px}
+.booking-card .field{margin-bottom:10px}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px}
+.field textarea{resize:vertical;min-height:72px}
+.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.gallery figure{margin:0;background:#fffefa;border:1px solid var(--line);padding:8px;border-radius:16px}
+.gallery img{width:100%;height:180px;object-fit:cover;border-radius:11px}
+.gallery figcaption{font-family:Georgia,serif;font-size:15px;padding:9px 3px 3px}
+.footer{padding:26px 0 10px;text-align:center;color:#969287;font-size:11px}
+.modal-backdrop{position:fixed;inset:0;background:#24281f8c;z-index:20;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-backdrop.open{display:flex}
+.modal{background:var(--paper);width:min(620px,100%);max-height:90vh;overflow:auto;border-radius:22px;padding:24px;box-shadow:0 25px 90px #171a1650}
+.modal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.modal-top h3{font-family:Georgia,serif;font-weight:400;font-size:25px;margin:0}
+.modal .field{margin-bottom:13px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;flex-wrap:wrap}
+.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);background:var(--forest);color:white;padding:11px 17px;border-radius:999px;opacity:0;pointer-events:none;transition:.25s;z-index:30;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.hidden{display:none!important}
+.file-label{display:inline-flex;align-items:center;gap:7px}
+@media(max-width:850px){
+ .app{padding:14px}.hero{grid-template-columns:1fr}.hero-copy{padding:30px}.hero-photo{min-height:240px}.stats{grid-template-columns:repeat(2,1fr)}
+ .layout-two{grid-template-columns:1fr}.destination-grid{grid-template-columns:repeat(2,1fr)}.destination-grid .destination:last-child{grid-column:span 2}
+}
+@media(max-width:560px){
+ .app{padding:10px}.topbar{align-items:flex-start}.brand h1{font-size:18px}.brand p{font-size:9px}.brand-mark{width:38px;height:38px}
+ .top-actions .btn{padding:8px 10px;font-size:11px}.top-actions .btn .long{display:none}
+ .hero{border-radius:22px}.hero h2{font-size:42px}.hero-meta{gap:10px}.stats{gap:8px}.stat{padding:13px}.stat-value{font-size:23px}
+ .nav{margin-bottom:16px}.nav button{padding:10px 12px}.section-head{align-items:flex-start;flex-direction:column}.section-head h2{font-size:27px}
+ .card{padding:15px;border-radius:18px}.destination-grid{grid-template-columns:1fr}.destination-grid .destination:last-child{grid-column:auto}.destination-photo{height:210px}
+ .activity{grid-template-columns:49px minmax(0,1fr);gap:9px;padding:12px}.activity-actions{grid-column:2;justify-content:flex-end}.activity-time{font-size:11px}.booking-grid,.field-grid{grid-template-columns:1fr}
+ .gallery{grid-template-columns:repeat(2,1fr)}.gallery img{height:140px}.day-toolbar select{width:100%}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">✳</div>
+      <div><h1>my travel journal</h1><p>collect moments, not things</p></div>
+    </div>
+    <div class="top-actions">
+      <button class="btn" id="exportBtn" title="Download a backup of your trip">↗ <span class="long">Export</span></button>
+      <label class="btn file-label" title="Restore a trip backup">↙ <span class="long">Import</span><input id="importInput" type="file" accept=".json,application/json" hidden></label>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-copy">
+      <div class="eyebrow">Your winter escape · December 2026</div>
+      <h2>South Korea,<br><em>in soft focus.</em></h2>
+      <p>Little cafés, snowy slopes, late-night markets and the kind of memories that stay with you.</p>
+      <div class="hero-meta">
+        <span>⌁ 23 Dec 2026 — 5 Jan 2027</span>
+        <span>♡ 14 days · 3 destinations</span>
+      </div>
+    </div>
+    <div class="hero-photo">
+      <img src="https://images.unsplash.com/photo-1517154421773-0529f29ea451?auto=format&fit=crop&w=1400&q=85" alt="Winter view of Seoul" onerror="this.src='https://images.unsplash.com/photo-1538485399081-7191377e8241?auto=format&fit=crop&w=1400&q=85'">
+      <div class="photo-caption">a winter story to remember</div>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="Trip summary">
+    <div class="stat"><div class="stat-label">Trip duration</div><div class="stat-value">14 days</div><div class="stat-note">23 Dec — 5 Jan</div></div>
+    <div class="stat"><div class="stat-label">Budget</div><div class="stat-value" id="statBudget">RM 5,000</div><div class="stat-note">Your planned trip budget</div></div>
+    <div class="stat"><div class="stat-label">Expenses logged</div><div class="stat-value" id="statSpent">RM 0</div><div class="stat-note" id="statSpentNote">Nothing logged yet</div></div>
+    <div class="stat"><div class="stat-label">Packing progress</div><div class="stat-value" id="statPacking">0%</div><div class="progress"><span id="packingBar"></span></div></div>
+  </section>
+
+  <nav class="nav" aria-label="Main navigation">
+    <button class="active" data-tab="overview">Overview</button>
+    <button data-tab="itinerary">Itinerary</button>
+    <button data-tab="budget">Budget</button>
+    <button data-tab="packing">Packing list</button>
+    <button data-tab="bookings">Bookings</button>
+    <button data-tab="gallery">Inspiration</button>
+  </nav>
+
+  <main>
+    <section class="panel active" id="panel-overview">
+      <div class="section-head"><div><h2>The journey</h2><p>Three places, one winter adventure.</p></div><button class="btn primary" data-goto="itinerary">Plan a day ↗</button></div>
+      <div class="destination-grid">
+        <article class="destination">
+          <div class="destination-photo"><img src="https://images.unsplash.com/photo-1538485399081-7191377e8241?auto=format&fit=crop&w=900&q=80" alt="Seoul city view" loading="lazy"><span>23–27 Dec · 2–5 Jan</span></div>
+          <div class="destination-body"><h3>Seoul</h3><p>City lights, shopping streets, palaces and cosy cafés.</p><span class="pill">Shopping</span><span class="pill">Culture</span><span class="pill">Cafés</span></div>
+        </article>
+        <article class="destination">
+          <div class="destination-photo"><img src="https://images.unsplash.com/photo-1517299321609-52687d1bc55a?auto=format&fit=crop&w=900&q=80" alt="Snowy ski resort" loading="lazy"><span>27–29 Dec</span></div>
+          <div class="destination-body"><h3>Vivaldi Park</h3><p>Snowy slopes, winter activities and a mountain stay.</p><span class="pill">Skiing</span><span class="pill">Snow</span><span class="pill">Resort</span></div>
+        </article>
+        <article class="destination">
+          <div class="destination-photo"><img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=900&q=80" alt="Korean traditional architecture" loading="lazy"><span>29 Dec – 2 Jan</span></div>
+          <div class="destination-body"><h3>Busan</h3><p>Coastal views, seafood, colourful neighbourhoods and slow mornings.</p><span class="pill">Coast</span><span class="pill">Food</span><span class="pill">Explore</span></div>
+        </article>
+      </div>
+      <div class="layout-two" style="margin-top:18px">
+        <div class="card">
+          <div class="card-head"><h3>Trip at a glance</h3><span class="pill">Winter 2026/27</span></div>
+          <div class="expense-list">
+            <div class="expense"><div><strong>23–27 December</strong><div class="meta">Arrive in Seoul · settle in and explore</div></div><a class="btn small" href="https://www.google.com/maps/search/Seoul+South+Korea" target="_blank" rel="noopener">Open map ↗</a></div>
+            <div class="expense"><div><strong>27–29 December</strong><div class="meta">Vivaldi Park · skiing and snow activities</div></div><a class="btn small" href="https://www.google.com/maps/search/Vivaldi+Park+South+Korea" target="_blank" rel="noopener">Open map ↗</a></div>
+            <div class="expense"><div><strong>29 December–2 January</strong><div class="meta">Busan · coast, food and sightseeing</div></div><a class="btn small" href="https://www.google.com/maps/search/Busan+South+Korea" target="_blank" rel="noopener">Open map ↗</a></div>
+            <div class="expense"><div><strong>2–5 January</strong><div class="meta">Back to Seoul · final shopping and flight home</div></div><a class="btn small" href="https://www.google.com/maps/search/Seoul+South+Korea" target="_blank" rel="noopener">Open map ↗</a></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Trip settings</h3>
+          <div class="field"><label for="tripName">Trip name</label><input id="tripName" value="South Korea Winter Escape"></div>
+          <div class="field-grid">
+            <div class="field"><label for="budgetInput">Budget (MYR)</label><input id="budgetInput" type="number" min="0" step="50" value="5000"></div>
+            <div class="field"><label for="currency">Display currency</label><select id="currency"><option value="MYR">MYR · RM</option><option value="KRW">KRW · ₩</option></select></div>
+          </div>
+          <p class="small-text muted">Your trip data saves in this browser automatically. Export a backup before changing devices.</p>
+          <button class="btn soft" id="saveSettings">Save trip settings</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-itinerary">
+      <div class="section-head"><div><h2>Day by day</h2><p>Make room for the things you don't want to miss.</p></div><button class="btn primary" id="addActivityBtn">＋ Add activity</button></div>
+      <div class="card">
+        <div class="day-toolbar">
+          <label for="daySelect" class="small-text muted">Choose a day</label>
+          <select id="daySelect" aria-label="Choose itinerary date"></select>
+          <span class="day-label" id="dayTitle"></span>
+        </div>
+        <div class="timeline" id="timeline"></div>
+        <div class="day-summary" id="daySummary"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-budget">
+      <div class="section-head"><div><h2>Budget & spending</h2><p>Keep an eye on the little things and the big ones.</p></div><button class="btn primary" id="addExpenseBtn">＋ Add expense</button></div>
+      <div class="layout-two">
+        <div class="card">
+          <h3>Expenses</h3>
+          <div id="expenseList" class="expense-list"></div>
+        </div>
+        <div class="card">
+          <div class="eyebrow">Your budget</div><div class="budget-big" id="budgetBig">RM 5,000</div>
+          <div class="budget-line"><span id="spentLabel">RM 0 spent</span><span id="remainingLabel">RM 5,000 left</span></div>
+          <div class="progress"><span id="budgetBar"></span></div>
+          <div class="category-bars" id="categoryBars"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-packing">
+      <div class="section-head"><div><h2>Packing list</h2><p>Winter layers, travel essentials and the little extras.</p></div><button class="btn primary" id="addPackingBtn">＋ Add item</button></div>
+      <div class="layout-two">
+        <div class="card"><div class="card-head"><h3>Don't forget</h3><span class="pill" id="packingCount">0 items</span></div><div class="check-progress"><span id="packingProgressText">0 of 0 packed</span><button class="btn small" id="clearPackedBtn">Remove packed</button></div><div id="packingList" class="checklist"></div></div>
+        <div class="card"><h3>Winter packing notes</h3><p class="muted">December and January can be very cold, especially on the ski slopes. Check the forecast before departure and layer up.</p><div class="expense-list">
+          <div class="expense"><div><strong>Warm layers</strong><div class="meta">Thermal base layers, sweaters, winter coat</div></div><span>❄</span></div>
+          <div class="expense"><div><strong>Snow essentials</strong><div class="meta">Gloves, thick socks, beanie, waterproof shoes</div></div><span>♧</span></div>
+          <div class="expense"><div><strong>Travel documents</strong><div class="meta">Passport, flight details, hotel confirmations</div></div><span>✧</span></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-bookings">
+      <div class="section-head"><div><h2>Bookings & details</h2><p>Keep the practical details together in one place.</p></div><span class="pill">Private to this browser*</span></div>
+      <div class="booking-grid">
+        <div class="booking-card"><h4>✈ Flights</h4>
+          <div class="field"><label for="flightRoute">Route / airline</label><input id="flightRoute" data-booking="flightRoute" placeholder="e.g. KCH → ICN"></div>
+          <div class="field-grid"><div class="field"><label for="flightOut">Departure</label><input id="flightOut" data-booking="flightOut" type="datetime-local"></div><div class="field"><label for="flightReturn">Return</label><input id="flightReturn" data-booking="flightReturn" type="datetime-local"></div></div>
+          <div class="field"><label for="flightRef">Booking reference</label><input id="flightRef" data-booking="flightRef" placeholder="Add reference (optional)"></div>
+          <div class="field"><label for="flightNotes">Notes</label><textarea id="flightNotes" data-booking="flightNotes" placeholder="Terminal, baggage allowance, seat..."></textarea></div>
+        </div>
+        <div class="booking-card"><h4>⌂ Accommodation</h4>
+          <div class="field"><label for="hotelSeoul">Seoul hotel</label><input id="hotelSeoul" data-booking="hotelSeoul" placeholder="Hotel name and address"></div>
+          <div class="field"><label for="hotelSki">Vivaldi Park stay</label><input id="hotelSki" data-booking="hotelSki" placeholder="Resort / room details"></div>
+          <div class="field"><label for="hotelBusan">Busan hotel</label><input id="hotelBusan" data-booking="hotelBusan" placeholder="Hotel name and address"></div>
+          <div class="field"><label for="hotelNotes">Check-in / check-out notes</label><textarea id="hotelNotes" data-booking="hotelNotes" placeholder="Confirmation numbers, check-in times..."></textarea></div>
+        </div>
+        <div class="booking-card"><h4>🚆 Transport</h4>
+          <div class="field"><label for="transportKTX">KTX / train</label><input id="transportKTX" data-booking="transportKTX" placeholder="Train time, seats, booking link"></div>
+          <div class="field"><label for="transportTransfer">Private transfer</label><input id="transportTransfer" data-booking="transportTransfer" placeholder="Provider, pick-up details"></div>
+          <div class="field"><label for="transportLocal">Local transport</label><textarea id="transportLocal" data-booking="transportLocal" placeholder="T-money, airport transfer, taxi notes..."></textarea></div>
+        </div>
+        <div class="booking-card"><h4>♡ Important notes</h4>
+          <div class="field"><label for="emergencyNotes">Emergency contacts / reminders</label><textarea id="emergencyNotes" data-booking="emergencyNotes" placeholder="Emergency contact, insurance details, reminders..."></textarea></div>
+          <p class="small-text muted">*Booking details are saved in this browser only. Avoid entering sensitive information on a shared device or public computer.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-gallery">
+      <div class="section-head"><div><h2>Inspiration board</h2><p>A little moodboard for the places you're dreaming of.</p></div><a class="btn" href="https://www.google.com/maps/search/Seoul+Busan+Vivaldi+Park" target="_blank" rel="noopener">Explore map ↗</a></div>
+      <div class="gallery">
+        <figure><img src="https://images.unsplash.com/photo-1538485399081-7191377e8241?auto=format&fit=crop&w=800&q=80" alt="Seoul cityscape" loading="lazy"><figcaption>City lights in Seoul</figcaption></figure>
+        <figure><img src="https://images.unsplash.com/photo-1517299321609-52687d1bc55a?auto=format&fit=crop&w=800&q=80" alt="Snow-covered winter scene" loading="lazy"><figcaption>Chasing the snow</figcaption></figure>
+        <figure><img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80" alt="Traditional East Asian architecture" loading="lazy"><figcaption>Quiet old streets</figcaption></figure>
+        <figure><img src="https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=800&q=80" alt="Japanese-style city street" loading="lazy"><figcaption>Wandering without a plan</figcaption></figure>
+        <figure><img src="https://images.unsplash.com/photo-1517154421773-0529f29ea451?auto=format&fit=crop&w=800&q=80" alt="Winter city travel" loading="lazy"><figcaption>Winter postcards</figcaption></figure>
+        <figure><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80" alt="Mountain landscape" loading="lazy"><figcaption>Take the scenic route</figcaption></figure>
+      </div>
+      <p class="small-text muted" style="margin-top:14px">Images are loaded from Unsplash and require an internet connection. They are inspiration images, not guaranteed photographs of the exact locations.</p>
+    </section>
+  </main>
+  <footer class="footer">MADE FOR THE MEMORIES · Your edits save automatically in this browser · Export a backup before clearing browser data</footer>
+</div>
+
+<div class="modal-backdrop" id="activityModal" role="dialog" aria-modal="true" aria-labelledby="activityModalTitle">
+  <div class="modal">
+    <div class="modal-top"><h3 id="activityModalTitle">Add an activity</h3><button class="icon-btn" id="closeActivityModal" aria-label="Close">✕</button></div>
+    <form id="activityForm">
+      <input type="hidden" id="activityId">
+      <div class="field"><label for="activityTitle">Activity name *</label><input id="activityTitle" required maxlength="100" placeholder="e.g. Explore Myeongdong"></div>
+      <div class="field-grid">
+        <div class="field"><label for="activityDate">Date *</label><input id="activityDate" type="date" min="2026-12-23" max="2027-01-05" required></div>
+        <div class="field"><label for="activityTime">Time</label><input id="activityTime" type="time"></div>
+      </div>
+      <div class="field"><label for="activityLocation">Location</label><input id="activityLocation" placeholder="Place or address"></div>
+      <div class="field"><label for="activityCost">Estimated cost (MYR)</label><input id="activityCost" type="number" min="0" step="0.01" value="0"></div>
+      <div class="field"><label for="activityNotes">Notes</label><textarea id="activityNotes" placeholder="Reservation details, ideas, reminders..."></textarea></div>
+      <div class="modal-actions"><button type="button" class="btn" id="cancelActivity">Cancel</button><button class="btn primary" type="submit">Save activity</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="expenseModal" role="dialog" aria-modal="true" aria-labelledby="expenseModalTitle">
+  <div class="modal">
+    <div class="modal-top"><h3 id="expenseModalTitle">Add an expense</h3><button class="icon-btn" id="closeExpenseModal" aria-label="Close">✕</button></div>
+    <form id="expenseForm">
+      <input type="hidden" id="expenseId">
+      <div class="field"><label for="expenseTitle">Expense *</label><input id="expenseTitle" required maxlength="100" placeholder="e.g. KTX tickets"></div>
+      <div class="field-grid">
+        <div class="field"><label for="expenseAmount">Amount (MYR) *</label><input id="expenseAmount" type="number" min="0" step="0.01" required></div>
+        <div class="field"><label for="expenseCategory">Category</label><select id="expenseCategory"><option>Flights</option><option>Accommodation</option><option>Transport</option><option>Food</option><option>Shopping</option><option>Activities</option><option>Other</option></select></div>
+      </div>
+      <div class="field"><label for="expenseDate">Date</label><input id="expenseDate" type="date" min="2026-12-23" max="2027-01-05" value="2026-12-23"></div>
+      <div class="field"><label for="expenseNotes">Notes</label><input id="expenseNotes" placeholder="Optional note"></div>
+      <div class="modal-actions"><button type="button" class="btn" id="cancelExpense">Cancel</button><button class="btn primary" type="submit">Save expense</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="packingModal" role="dialog" aria-modal="true" aria-labelledby="packingModalTitle">
+  <div class="modal">
+    <div class="modal-top"><h3 id="packingModalTitle">Add a packing item</h3><button class="icon-btn" id="closePackingModal" aria-label="Close">✕</button></div>
+    <form id="packingForm"><div class="field"><label for="packingText">Item *</label><input id="packingText" required maxlength="100" placeholder="e.g. Portable charger"></div>
+    <div class="modal-actions"><button type="button" class="btn" id="cancelPacking">Cancel</button><button class="btn primary" type="submit">Add item</button></div></form>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+const STORAGE_KEY='myTravelJournalSouthKorea_v1';
+const START='2026-12-23', END='2027-01-05';
+const CURRENCY={MYR:'RM',KRW:'₩'};
+const $=id=>document.getElementById(id);
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const dateList=()=>{const out=[];let d=new Date(START+'T12:00:00'),end=new Date(END+'T12:00:00');while(d<=end){out.push(localISO(d));d.setDate(d.getDate()+1)}return out};
+const localISO=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const fmtDate=(iso,opts={weekday:'short',day:'numeric',month:'short'})=>new Date(iso+'T12:00:00').toLocaleDateString('en-GB',opts);
+const money=n=>`${CURRENCY[state.settings.currency]||'RM'} ${Number(n||0).toLocaleString('en-MY',{minimumFractionDigits:0,maximumFractionDigits:2})}`;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const defaultState=()=>({
+ settings:{name:'South Korea Winter Escape',budget:5000,currency:'MYR'},
+ activities:[
+  {id:uid(),date:'2026-12-23',time:'20:00',title:'Arrive in Seoul',location:'Incheon International Airport',cost:0,notes:'Immigration, collect luggage and transfer to hotel.'},
+  {id:uid(),date:'2026-12-24',time:'10:00',title:'Slow morning and café stop',location:'Seoul',cost:35,notes:'Keep the first day flexible after travelling.'},
+  {id:uid(),date:'2026-12-25',time:'10:00',title:'Explore Gyeongbokgung area',location:'Gyeongbokgung Palace, Seoul',cost:25,notes:'Check holiday opening hours before visiting.'},
+  {id:uid(),date:'2026-12-26',time:'14:00',title:'Shopping and street food',location:'Myeongdong, Seoul',cost:100,notes:'Leave room in the budget for shopping.'},
+  {id:uid(),date:'2026-12-27',time:'09:00',title:'Transfer to Vivaldi Park',location:'Vivaldi Park, Hongcheon',cost:0,notes:'Confirm private transfer pick-up details.'},
+  {id:uid(),date:'2026-12-28',time:'09:00',title:'Ski day',location:'Vivaldi Park Ski World',cost:250,notes:'Check lift pass, rental and lesson prices.'},
+  {id:uid(),date:'2026-12-29',time:'10:00',title:'Travel to Busan',location:'Busan, South Korea',cost:0,notes:'Confirm transfer back to Seoul and KTX booking.'},
+  {id:uid(),date:'2026-12-30',time:'10:00',title:'Explore Busan',location:'Busan',cost:80,notes:'Choose attractions based on the weather.'},
+  {id:uid(),date:'2026-12-31',time:'17:00',title:'New Year’s Eve dinner',location:'Busan',cost:120,notes:'Book ahead if you want a special dinner.'},
+  {id:uid(),date:'2027-01-01',time:'11:00',title:'Easy New Year’s Day',location:'Busan',cost:50,notes:'Check public holiday opening times.'},
+  {id:uid(),date:'2027-01-02',time:'09:00',title:'Return to Seoul',location:'Busan Station → Seoul Station',cost:0,notes:'Allow time to get to the station.'},
+  {id:uid(),date:'2027-01-03',time:'11:00',title:'Final shopping day',location:'Seoul',cost:150,notes:'Keep receipts and check luggage weight.'},
+  {id:uid(),date:'2027-01-04',time:'10:00',title:'Last cafés and packing',location:'Seoul',cost:60,notes:'Check flight time and airport transfer.'},
+  {id:uid(),date:'2027-01-05',time:'08:00',title:'Check out and depart',location:'Incheon International Airport',cost:0,notes:'Confirm departure terminal and travel time.'}
+ ],
+ expenses:[],
+ packing:[
+  {id:uid(),text:'Passport and travel documents',done:false},{id:uid(),text:'Flight and hotel confirmations',done:false},
+  {id:uid(),text:'Travel insurance details',done:false},{id:uid(),text:'Thermal base layers',done:false},
+  {id:uid(),text:'Winter coat and sweaters',done:false},{id:uid(),text:'Gloves, beanie and scarf',done:false},
+  {id:uid(),text:'Thick socks and comfortable shoes',done:false},{id:uid(),text:'Waterproof shoes for snow',done:false},
+  {id:uid(),text:'Skincare and lip balm',done:false},{id:uid(),text:'Phone charger and power bank',done:false},
+  {id:uid(),text:'Travel adapter',done:false},{id:uid(),text:'Medication and personal essentials',done:false},
+  {id:uid(),text:'Small day bag',done:false},{id:uid(),text:'T-money card / transport plan',done:false}
+ ],
+ bookings:{}
+});
+let state;
+try{const saved=localStorage.getItem(STORAGE_KEY);state=saved?mergeState(defaultState(),JSON.parse(saved)):defaultState()}catch(e){state=defaultState()}
+function mergeState(base,loaded){
+ if(!loaded||typeof loaded!=='object')return base;
+ return {settings:{...base.settings,...(loaded.settings||{})},activities:Array.isArray(loaded.activities)?loaded.activities:base.activities,expenses:Array.isArray(loaded.expenses)?loaded.expenses:base.expenses,packing:Array.isArray(loaded.packing)?loaded.packing:base.packing,bookings:{...base.bookings,...(loaded.bookings||{})}};
+}
+let selectedDate=START,toastTimer;
+function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){showToast('Could not save locally. Export a backup.')}renderStats()}
+function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2400)}
+function openModal(id){$(id).classList.add('open');const first=$(id).querySelector('input:not([type=hidden]),select,textarea');if(first)setTimeout(()=>first.focus(),50)}
+function closeModal(id){$(id).classList.remove('open')}
+function switchTab(tab){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+tab));if(tab==='itinerary')renderItinerary();if(tab==='budget')renderBudget();if(tab==='packing')renderPacking();window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.goto)));
+function renderDateSelect(){
+ const sel=$('daySelect');sel.innerHTML=dateList().map(d=>`<option value="${d}">${fmtDate(d,{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</option>`).join('');sel.value=selectedDate;
+}
+function renderItinerary(){
+ const dayActivities=state.activities.filter(a=>a.date===selectedDate).sort((a,b)=>(a.time||'99:99').localeCompare(b.time||'99:99'));
+ $('dayTitle').textContent=fmtDate(selectedDate,{weekday:'long',day:'numeric',month:'long'});
+ const timeline=$('timeline');
+ if(!dayActivities.length)timeline.innerHTML='<div class="empty">A little blank space for a new adventure.<br><button class="btn soft small" style="margin-top:12px" id="emptyAdd">＋ Add the first activity</button></div>';
+ else timeline.innerHTML=dayActivities.map((a,i)=>`<article class="activity">
+  <div class="activity-time">${esc(a.time||'Anytime')}</div>
+  <div><h4>${esc(a.title)}</h4>${a.location?`<p>⌖ ${esc(a.location)} <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a.location)}" target="_blank" rel="noopener" aria-label="Open location in Google Maps">↗</a></p>`:''}${a.notes?`<div class="activity-note">${esc(a.notes)}</div>`:''}<div class="activity-cost">${money(a.cost||0)}</div></div>
+  <div class="activity-actions"><button class="icon-btn" data-act="up" data-id="${esc(a.id)}" title="Move earlier" ${i===0?'disabled':''}>↑</button><button class="icon-btn" data-act="down" data-id="${esc(a.id)}" title="Move later" ${i===dayActivities.length-1?'disabled':''}>↓</button><button class="icon-btn" data-act="edit" data-id="${esc(a.id)}" title="Edit">✎</button><button class="icon-btn" data-act="delete" data-id="${esc(a.id)}" title="Delete">×</button></div>
+ </article>`).join('');
+ const dayTotal=dayActivities.reduce((sum,a)=>sum+Number(a.cost||0),0);
+ $('daySummary').innerHTML=`<span>☼ ${dayActivities.length} ${dayActivities.length===1?'activity':'activities'}</span><span>♡ Planned activity costs: <strong>${money(dayTotal)}</strong></span><span>⌁ <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dayActivities.map(a=>a.location).filter(Boolean).join(' ' )||'Seoul South Korea')}" target="_blank" rel="noopener">View day on map ↗</a></span>`;
+ const emptyAdd=$('emptyAdd');if(emptyAdd)emptyAdd.addEventListener('click',()=>newActivity());
+ timeline.querySelectorAll('[data-act]').forEach(btn=>btn.addEventListener('click',()=>activityAction(btn.dataset.act,btn.dataset.id)));
+}
+function newActivity(){ $('activityForm').reset();$('activityId').value='';$('activityDate').value=selectedDate;$('activityCost').value='0';$('activityModalTitle').textContent='Add an activity';openModal('activityModal')}
+function editActivity(id){const a=state.activities.find(x=>x.id===id);if(!a)return;$('activityForm').reset();$('activityId').value=a.id;$('activityTitle').value=a.title;$('activityDate').value=a.date;$('activityTime').value=a.time||'';$('activityLocation').value=a.location||'';$('activityCost').value=a.cost||0;$('activityNotes').value=a.notes||'';$('activityModalTitle').textContent='Edit activity';openModal('activityModal')}
+function activityAction(action,id){
+ const a=state.activities.find(x=>x.id===id);if(!a)return;
+ if(action==='edit')return editActivity(id);
+ if(action==='delete'){if(confirm(`Delete "${a.title}"?`)){state.activities=state.activities.filter(x=>x.id!==id);persist();renderItinerary();showToast('Activity deleted.')}return}
+ if(action==='up'||action==='down'){const list=state.activities.filter(x=>x.date===a.date).sort((x,y)=>(x.time||'99:99').localeCompare(y.time||'99:99'));const i=list.findIndex(x=>x.id===id),j=action==='up'?i-1:i+1;if(j<0||j>=list.length)return;const other=list[j];const t=a.time;a.time=other.time;other.time=t;if(a.time===other.time){a.time=action==='up'?'08:00':'22:00'}persist();renderItinerary()}
+}
+$('daySelect').addEventListener('change',e=>{selectedDate=e.target.value;renderItinerary()});
+$('addActivityBtn').addEventListener('click',newActivity);
+$('activityForm').addEventListener('submit',e=>{
+ e.preventDefault();const id=$('activityId').value;
+ const item={id:id||uid(),title:$('activityTitle').value.trim(),date:$('activityDate').value,time:$('activityTime').value,location:$('activityLocation').value.trim(),cost:Math.max(0,Number($('activityCost').value)||0),notes:$('activityNotes').value.trim()};
+ if(!item.title||!item.date)return;
+ if(id)state.activities=state.activities.map(a=>a.id===id?item:a);else state.activities.push(item);
+ selectedDate=item.date;renderDateSelect();persist();renderItinerary();closeModal('activityModal');showToast(id?'Activity updated.':'Activity added.');
+});
+function renderBudget(){
+ const total=state.expenses.reduce((s,e)=>s+Number(e.amount||0),0),budget=Math.max(0,Number(state.settings.budget)||0),remaining=budget-total;
+ $('budgetBig').textContent=money(budget);$('spentLabel').textContent=money(total)+' spent';$('remainingLabel').textContent=money(remaining)+' '+(remaining>=0?'left':'over budget');
+ $('budgetBar').style.width=(budget?Math.min(100,total/budget*100):0)+'%';
+ const list=$('expenseList');
+ if(!state.expenses.length)list.innerHTML='<div class="empty">No expenses logged yet.<br>Add your first expense to start tracking.</div>';
+ else list.innerHTML=state.expenses.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(e=>`<div class="expense"><div><strong>${esc(e.title)}</strong><div class="meta">${esc(e.category||'Other')} · ${esc(e.date||'No date')}${e.notes?' · '+esc(e.notes):''}</div><div style="margin-top:5px"><button class="btn small" data-exp-edit="${esc(e.id)}">Edit</button> <button class="btn small danger" data-exp-delete="${esc(e.id)}">Delete</button></div></div><div class="expense-amount">${money(e.amount)}</div></div>`).join('');
+ const cats=['Flights','Accommodation','Transport','Food','Shopping','Activities','Other'];
+ $('categoryBars').innerHTML=cats.map(c=>{const n=state.expenses.filter(e=>e.category===c).reduce((s,e)=>s+Number(e.amount||0),0);return `<div class="category-row"><div class="cat-top"><span>${c}</span><strong>${money(n)}</strong></div><div class="progress"><span style="width:${total?Math.min(100,n/total*100):0}%;background:${c==='Food'?'#c9a18f':c==='Shopping'?'#b8a0bc':c==='Transport'?'#d9b66f':'var(--sage-dark)'}"></span></div></div>`}).join('');
+ list.querySelectorAll('[data-exp-edit]').forEach(b=>b.addEventListener('click',()=>editExpense(b.dataset.expEdit)));
+ list.querySelectorAll('[data-exp-delete]').forEach(b=>b.addEventListener('click',()=>{const e=state.expenses.find(x=>x.id===b.dataset.expDelete);if(e&&confirm(`Delete "${e.title}"?`)){state.expenses=state.expenses.filter(x=>x.id!==e.id);persist();renderBudget();showToast('Expense deleted.')}}));
+}
+function newExpense(){$('expenseForm').reset();$('expenseId').value='';$('expenseDate').value=selectedDate;$('expenseModalTitle').textContent='Add an expense';openModal('expenseModal')}
+function editExpense(id){const e=state.expenses.find(x=>x.id===id);if(!e)return;$('expenseId').value=e.id;$('expenseTitle').value=e.title;$('expenseAmount').value=e.amount;$('expenseCategory').value=e.category||'Other';$('expenseDate').value=e.date||selectedDate;$('expenseNotes').value=e.notes||'';$('expenseModalTitle').textContent='Edit expense';openModal('expenseModal')}
+$('addExpenseBtn').addEventListener('click',newExpense);
+$('expenseForm').addEventListener('submit',e=>{e.preventDefault();const id=$('expenseId').value,item={id:id||uid(),title:$('expenseTitle').value.trim(),amount:Math.max(0,Number($('expenseAmount').value)||0),category:$('expenseCategory').value,date:$('expenseDate').value,notes:$('expenseNotes').value.trim()};if(!item.title)return;if(id)state.expenses=state.expenses.map(x=>x.id===id?item:x);else state.expenses.push(item);persist();renderBudget();closeModal('expenseModal');showToast(id?'Expense updated.':'Expense added.')});
+function renderPacking(){
+ const list=$('packingList'),done=state.packing.filter(p=>p.done).length,total=state.packing.length,pct=total?Math.round(done/total*100):0;
+ $('packingCount').textContent=`${total} items`;$('packingProgressText').textContent=`${done} of ${total} packed`;$('statPacking').textContent=pct+'%';$('packingBar').style.width=pct+'%';
+ if(!total){list.innerHTML='<div class="empty">Your packing list is clear. Add what you need to bring.</div>';return}
+ list.innerHTML=state.packing.map(p=>`<div class="check-item ${p.done?'done':''}"><input type="checkbox" data-pack-check="${esc(p.id)}" ${p.done?'checked':''} aria-label="Mark ${esc(p.text)} packed"><span>${esc(p.text)}</span><button class="icon-btn" data-pack-delete="${esc(p.id)}" aria-label="Delete ${esc(p.text)}">×</button></div>`).join('');
+ list.querySelectorAll('[data-pack-check]').forEach(c=>c.addEventListener('change',()=>{const p=state.packing.find(x=>x.id===c.dataset.packCheck);if(p)p.done=c.checked;persist();renderPacking()}));
+ list.querySelectorAll('[data-pack-delete]').forEach(b=>b.addEventListener('click',()=>{state.packing=state.packing.filter(p=>p.id!==b.dataset.packDelete);persist();renderPacking()}));
+}
+$('addPackingBtn').addEventListener('click',()=>{$('packingForm').reset();openModal('packingModal')});
+$('packingForm').addEventListener('submit',e=>{e.preventDefault();const text=$('packingText').value.trim();if(text){state.packing.push({id:uid(),text,done:false});persist();renderPacking();closeModal('packingModal');showToast('Packing item added.')}});
+$('clearPackedBtn').addEventListener('click',()=>{const n=state.packing.filter(p=>p.done).length;if(n&&confirm(`Remove ${n} packed item(s) from the list?`)){state.packing=state.packing.filter(p=>!p.done);persist();renderPacking();showToast('Packed items removed.')}});
+function renderStats(){
+ const spent=state.expenses.reduce((s,e)=>s+Number(e.amount||0),0),budget=Math.max(0,Number(state.settings.budget)||0);
+ $('statBudget').textContent=money(budget);$('statSpent').textContent=money(spent);$('statSpentNote').textContent=budget?`${Math.round(spent/budget*100)}% of planned budget`:'Set a budget to compare';
+ const done=state.packing.filter(p=>p.done).length;$('statPacking').textContent=(state.packing.length?Math.round(done/state.packing.length*100):0)+'%';$('packingBar').style.width=(state.packing.length?done/state.packing.length*100:0)+'%';
+}
+function loadSettings(){
+ $('tripName').value=state.settings.name||'';$('budgetInput').value=state.settings.budget??5000;$('currency').value=state.settings.currency||'MYR';
+ document.querySelectorAll('[data-booking]').forEach(el=>el.value=state.bookings[el.dataset.booking]||'');
+}
+function saveSettings(){
+ state.settings.name=$('tripName').value.trim()||'My Travel Journal';state.settings.budget=Math.max(0,Number($('budgetInput').value)||0);state.settings.currency=$('currency').value;
+ document.title=state.settings.name+' — My Travel Journal';persist();renderBudget();showToast('Trip settings saved.');
+}
+$('saveSettings').addEventListener('click',saveSettings);
+$('budgetInput').addEventListener('change',saveSettings);$('currency').addEventListener('change',saveSettings);
+$('tripName').addEventListener('change',saveSettings);
+document.querySelectorAll('[data-booking]').forEach(el=>el.addEventListener('input',()=>{state.bookings[el.dataset.booking]=el.value;persist()}));
+function download(filename,content,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+$('exportBtn').addEventListener('click',()=>{download('south-korea-travel-journal-backup.json',JSON.stringify(state,null,2),'application/json');showToast('Trip backup exported.')});
+$('importInput').addEventListener('change',async e=>{
+ const file=e.target.files&&e.target.files[0];if(!file)return;
+ try{const data=JSON.parse(await file.text());if(!data||typeof data!=='object'||!Array.isArray(data.activities)||!Array.isArray(data.expenses)||!Array.isArray(data.packing))throw new Error('Invalid backup');if(!confirm('Import this backup and replace the current trip data? Export your current data first if you want to keep it.'))return;state=mergeState(defaultState(),data);selectedDate=START;persist();renderDateSelect();loadSettings();renderItinerary();renderBudget();renderPacking();showToast('Trip backup imported.')}
+ catch(err){alert('This file does not look like a valid Travel Journal backup. Nothing was changed.')}
+ finally{e.target.value=''}
+});
+[['closeActivityModal','activityModal'],['cancelActivity','activityModal'],['closeExpenseModal','expenseModal'],['cancelExpense','expenseModal'],['closePackingModal','packingModal'],['cancelPacking','packingModal']].forEach(([btn,modal])=>$(btn).addEventListener('click',()=>closeModal(modal)));
+document.querySelectorAll('.modal-backdrop').forEach(back=>back.addEventListener('click',e=>{if(e.target===back)back.classList.remove('open')}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-backdrop.open').forEach(m=>m.classList.remove('open'))});
+renderDateSelect();loadSettings();renderItinerary();renderBudget();renderPacking();renderStats();
+})();
+</script>
+</body>
+</html>
