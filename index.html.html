@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f5f1e8">
+<title>My Travel Journal — South Korea</title>
+<style>
+:root{
+  --cream:#f7f4ed;--paper:#fffdf8;--sand:#e8dfd0;--sage:#a9b7a0;--sage-dark:#596b56;
+  --forest:#34483a;--brown:#765d4b;--ink:#292c25;--muted:#77786e;--line:#e8e3d8;
+  --rose:#d9a89d;--gold:#d9b66f;--shadow:0 12px 34px rgba(67,57,43,.08);
+  --radius:22px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-size:14px;line-height:1.55}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{color:inherit}
+img{display:block;max-width:100%}
+.app{max-width:1440px;margin:0 auto;padding:22px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:43px;height:43px;border-radius:15px;background:var(--forest);color:#fff;display:grid;place-items:center;font-family:Georgia,serif;font-size:23px}
+.brand h1{font-family:Georgia,"Times New Roman",serif;font-size:21px;font-weight:500;letter-spacing:-.5px;margin:0}
+.brand p{margin:1px 0 0;color:var(--muted);font-size:11px;letter-spacing:1.5px;text-transform:uppercase}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);border-radius:999px;background:var(--paper);padding:10px 15px;color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:.2s;text-decoration:none}
+.btn:hover{transform:translateY(-1px);box-shadow:0 5px 15px #51452b12}
+.btn.primary{background:var(--forest);color:#fff;border-color:var(--forest)}
+.btn.soft{background:#e7ede3;border-color:#e7ede3;color:var(--forest)}
+.btn.danger{color:#9b5148;background:#fff8f6;border-color:#eed9d5}
+.btn.small{padding:7px 11px;font-size:12px}
+.icon-btn{border:0;background:transparent;color:var(--muted);padding:6px;border-radius:9px}
+.icon-btn:hover{background:#f0ece2;color:var(--ink)}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;min-height:330px;background:#e9e0d2;border-radius:30px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:22px}
+.hero-copy{padding:clamp(26px,5vw,58px);display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--sage-dark);font-weight:700}
+.hero h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(36px,5vw,61px);line-height:1.02;font-weight:400;letter-spacing:-1.8px;margin:13px 0}
+.hero h2 em{font-weight:400;color:var(--brown)}
+.hero-copy>p{color:#6d685d;max-width:450px;margin:0 0 22px}
+.hero-meta{display:flex;gap:20px;flex-wrap:wrap;color:#5c5d53;font-size:12px}
+.hero-meta span{display:flex;align-items:center;gap:6px}
+.hero-photo{position:relative;min-height:280px;background:#d8d1c3}
+.hero-photo img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.photo-caption{position:absolute;bottom:17px;right:17px;background:#fffdf0e8;padding:9px 13px;border-radius:12px;font-family:Georgia,serif;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:22px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:17px 19px;min-width:0}
+.stat-label{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:1.2px}
+.stat-value{font-family:Georgia,serif;font-size:27px;margin:6px 0 2px;letter-spacing:-.5px;overflow-wrap:anywhere}
+.stat-note{font-size:11px;color:var(--muted)}
+.progress{height:6px;background:#ebe8df;border-radius:20px;overflow:hidden;margin-top:11px}
+.progress span{height:100%;display:block;background:var(--sage-dark);border-radius:20px;width:0;transition:width .3s}
+.nav{display:flex;gap:6px;overflow:auto;padding:6px;background:#ebe7dd;border-radius:15px;margin-bottom:22px;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav button{border:0;background:transparent;color:#6f7066;border-radius:11px;padding:11px 16px;white-space:nowrap}
+.nav button.active{background:var(--paper);color:var(--forest);box-shadow:0 3px 10px #554a3310;font-weight:650}
+.panel{display:none;animation:fade .25s ease}
+.panel.active{display:block}
+@keyframes fade{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:8px 0 17px}
+.section-head h2{font-family:Georgia,serif;font-size:30px;font-weight:400;letter-spacing:-.5px;margin:0}
+.section-head p{margin:3px 0 0;color:var(--muted)}
+.layout-two{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,.8fr);gap:18px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:20px;min-width:0}
+.card h3{font-family:Georgia,serif;font-size:20px;font-weight:400;margin:0 0 13px}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.card-head h3{margin:0}
+.muted{color:var(--muted)}
+.small-text{font-size:12px}
+.destination-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.destination{border-radius:21px;overflow:hidden;background:var(--paper);border:1px solid var(--line);box-shadow:0 5px 20px #473d2c08}
+.destination-photo{height:190px;position:relative;background:#ddd}
+.destination-photo img{width:100%;height:100%;object-fit:cover}
+.destination-photo span{position:absolute;left:12px;top:12px;background:#fffdf0e8;padding:6px 10px;border-radius:999px;font-size:11px}
+.destination-body{padding:16px}
+.destination-body h3{font-family:Georgia,serif;font-size:22px;font-weight:400;margin:0}
+.destination-body p{color:var(--muted);font-size:12px;margin:6px 0 12px}
+.pill{display:inline-block;background:#e9eee5;color:var(--forest);border-radius:999px;padding:5px 9px;font-size:11px;margin:0 4px 4px 0}
+.day-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:15px}
+.day-toolbar select,.field input,.field select,.field textarea,.date-control{width:100%;border:1px solid #dfdace;background:#fffefa;border-radius:11px;padding:11px 12px;color:var(--ink);outline:none}
+.day-toolbar select:focus,.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--sage-dark);box-shadow:0 0 0 3px #a9b7a026}
+.day-toolbar select{width:auto;min-width:230px}
+.day-label{font-family:Georgia,serif;font-size:20px}
+.timeline{display:flex;flex-direction:column;gap:11px}
+.activity{display:grid;grid-template-columns:65px minmax(0,1fr) auto;gap:13px;align-items:start;background:#fffefa;border:1px solid var(--line);border-radius:16px;padding:15px}
+.activity-time{font-size:12px;font-weight:700;color:var(--sage-dark);padding-top:3px}
+.activity h4{font-size:15px;margin:0 0 4px;font-weight:650}
+.activity p{margin:3px 0;color:var(--muted);font-size:12px}
+.activity-note{color:#77766d;font-size:12px;margin-top:7px}
+.activity-cost{font-size:12px;color:var(--brown);font-weight:700;margin-top:5px}
+.activity-actions{display:flex;gap:2px}
+.activity-actions button{font-size:12px}
+.empty{padding:32px 15px;text-align:center;color:var(--muted);border:1px dashed #d9d2c4;border-radius:16px}
+.day-summary{display:flex;gap:15px;flex-wrap:wrap;margin-top:15px;padding:13px 15px;background:#f1f2eb;border-radius:13px;font-size:12px;color:#5c6857}
+.expense-list{display:flex;flex-direction:column;gap:9px}
+.expense{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.expense:last-child{border-bottom:0}
+.expense strong{font-size:13px}
+.expense .meta{font-size:11px;color:var(--muted);margin-top:3px}
+.expense-amount{white-space:nowrap;font-weight:650}
+.budget-big{font-family:Georgia,serif;font-size:34px;letter-spacing:-.5px;margin:7px 0}
+.budget-line{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted)}
+.category-bars{display:flex;flex-direction:column;gap:13px;margin-top:20px}
+.category-row .cat-top{display:flex;justify-content:space-between;gap:10px;font-size:12px;margin-bottom:6px}
+.category-row .progress{margin:0;height:7px}
+.checklist{display:flex;flex-direction:column;gap:9px}
+.check-item{display:flex;align-items:center;gap:11px;padding:12px;background:#fffefa;border:1px solid var(--line);border-radius:13px}
+.check-item input{accent-color:var(--sage-dark);width:17px;height:17px}
+.check-item.done span{text-decoration:line-through;color:#99998e}
+.check-item button{margin-left:auto}
+.check-progress{display:flex;justify-content:space-between;align-items:center;margin:12px 0 16px;color:var(--muted);font-size:12px}
+.booking-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.booking-card{background:#fffefa;border:1px solid var(--line);border-radius:16px;padding:17px}
+.booking-card h4{margin:0 0 12px;font-family:Georgia,serif;font-weight:400;font-size:19px}
+.booking-card .field{margin-bottom:10px}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px}
+.field textarea{resize:vertical;min-height:72px}
+.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.gallery figure{margin:0;background:#fffefa;border:1px solid var(--line);padding:8px;border-radius:16px}
+.gallery img{width:100%;height:180px;object-fit:cover;border-radius:11px}
+.gallery figcaption{font-family:Georgia,serif;font-size:15px;padding:9px 3px 3px}
+.footer{padding:26px 0 10px;text-align:center;color:#969287;font-size:11px}
+.modal-backdrop{position:fixed;inset:0;background:#24281f8c;z-index:20;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-backdrop.open{display:flex}
+.modal{background:var(--paper);width:min(620px,100%);max-height:90vh;overflow:auto;border-radius:22px;padding:24px;box-shadow:0 25px 90px #171a1650}
+.modal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.modal-top h3{font-family:Georgia,serif;font-weight:400;font-size:25px;margin:0}
+.modal .field{margin-bottom:13px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;flex-wrap:wrap}
+.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);background:var(--forest);color:white;padding:11px 17px;border-radius:999px;opacity:0;pointer-events:none;transition:.25s;z-index:30;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.hidden{display:none!important}
+.file-label{display:inline-flex;align-items:center;gap:7px}
+@media(max-width:850px){
+ .app{padding:14px}.hero{grid-template-columns:1fr}.hero-copy{padding:30px}.hero-photo{min-height:240px}.stats{grid-template-columns:repeat(2,1fr)}
+ .layout-two{grid-template-columns:1fr}.destination-grid{grid-template-columns:repeat(2,1fr)}.destination-grid .destination:last-child{grid-column:span 2}
+}
+@media(max-width:560px){
+ .app{padding:10px}.topbar{align-items:flex-start}.brand h1{font-size:18px}.brand p{font-size:9px}.brand-mark{width:38px;height:38px}
+ .top-actions .btn{padding:8px 10px;font-size:11px}.top-actions .btn .long{display:none}
+ .hero{border-radius:22px}.hero h2{font-size:42px}.hero-meta{gap:10px}.stats{gap:8px}.stat{padding:13px}.stat-value{font-size:23px}
+ .nav{margin-bottom:16px}.nav button{padding:10px 12px}.section-head{align-items:flex-start;flex-direction:column}.section-head h2{font-size:27px}
+ .card{padding:15px;border-radius:18px}.destination-grid{grid-template-columns:1fr}.destination-grid .destination:last-child{grid-column:auto}.destination-photo{height:210px}
+ .activity{grid-template-columns:49px minmax(0,1fr);gap:9px;padding:12px}.activity-actions{grid-column:2;justify-content:flex-end}.activity-time{font-size:11px}.booking-grid,.field-grid{grid-template-columns:1fr}
+ .gallery{grid-template-columns:repeat(2,1fr)}.gallery img{height:140px}.day-toolbar select{width:100%}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Travel tools upgrade */
+.tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:18px}
+.tool-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);min-width:0}
+.tool-card h3{margin:0 0 8px;font-family:Georgia,serif;font-size:22px;font-weight:500}
+.tool-card p{color:var(--muted)}
+.tool-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tool-row input,.tool-row select{flex:1;min-width:110px}
+.tool-input{width:100%;border:1px solid var(--line);background:#fffdf8;border-radius:12px;padding:11px;color:var(--ink)}
+.result-big{font-family:Georgia,serif;font-size:32px;color:var(--forest);margin:10px 0}
+.weather-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:12px}
+.weather-place{background:#f3f0e8;border-radius:14px;padding:12px;min-width:0}
+.weather-place strong{display:block}
+.weather-place small{color:var(--muted)}
+.checklist-day{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.day-check{display:flex;gap:8px;align-items:center;background:#f7f4ed;border-radius:10px;padding:9px}
+.day-check input{accent-color:var(--sage-dark)}
+.sync-note{background:#f3f0e8;border-radius:14px;padding:14px;color:var(--muted);font-size:12px}
+.mobile-travel-toggle{position:fixed;right:16px;bottom:16px;z-index:50;box-shadow:0 8px 28px #26382a30}
+body.travel-mode .app{max-width:850px;padding:12px}
+body.travel-mode .hero{min-height:220px}
+body.travel-mode .hero-copy{padding:24px}
+body.travel-mode .hero h2{font-size:38px}
+body.travel-mode .nav{position:sticky;top:6px;z-index:20}
+body.travel-mode .activity{padding:17px 12px}
+body.travel-mode .topbar .brand p,body.travel-mode .hero-photo,body.travel-mode .hero-copy>p{display:none}
+@media(max-width:760px){.tool-grid{grid-template-columns:1fr}.weather-list{grid-template-columns:1fr}.checklist-day{grid-template-columns:1fr}.mobile-travel-toggle{right:10px;bottom:10px}.app{padding:12px}.hero{grid-template-columns:1fr}.hero-photo{min-height:180px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.booking-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.booking-entry{border:1px solid var(--line);background:#fffefa;border-radius:16px;padding:16px;min-width:0}
+.booking-entry-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.booking-entry h4{font-family:Georgia,serif;font-size:19px;font-weight:400;margin:5px 0 7px;overflow-wrap:anywhere}
+.booking-meta{font-size:12px;color:var(--muted);margin:5px 0;overflow-wrap:anywhere}
+.booking-entry-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.booking-status{display:inline-block;border-radius:999px;padding:4px 9px;background:#e9eee5;color:var(--forest);font-size:11px}
+.booking-status.cancelled{background:#f6e7e3;color:#8b5148}
+.booking-entry a{overflow-wrap:anywhere;color:var(--sage-dark)}
+@media(max-width:650px){.booking-list{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">✳</div>
+      <div><h1>my travel journal</h1><p>collect moments, not things</p></div>
+    </div>
+    <div class="top-actions">
+      <button class="btn" id="exportBtn" title="Download a backup of your trip">↗ <span class="long">Export</span></button>
+      <label class="btn file-label" title="Restore a trip backup">↙ <span class="long">Import</span><input id="importInput" type="file" accept=".json,application/json" hidden></label>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-copy">
+      <div class="eyebrow">Your winter escape · December 2026</div>
+      <h2>South Korea,<br><em>in soft focus.</em></h2>
+      <p>Little cafés, snowy slopes, late-night markets and the kind of memories that stay with you.</p>
+      <div class="hero-meta">
+        <span>⌁ 23 Dec 2026 — 5 Jan 2027</span>
+        <span>♡ 14 days · 3 destinations</span>
+      </div>
+    </div>
+    <div class="hero-photo">
+      <img src="https://images.unsplash.com/photo-1517154421773-0529f29ea451?auto=format&fit=crop&w=1400&q=85" alt="Winter view of Seoul" onerror="this.src='https://images.unsplash.com/photo-1538485399081-7191377e8241?auto=format&fit=crop&w=1400&q=85'">
+      <div class="photo-caption">a winter story to remember</div>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="Trip summary">
+    <div class="stat"><div class="stat-label">Trip duration</div><div class="stat-value">14 days</div><div class="stat-note">23 Dec — 5 Jan</div></div>
+    <div class="stat"><div class="stat-label">Budget</div><div class="stat-value" id="statBudget">RM 5,000</div><div class="stat-note">Your planned trip budget</div></div>
+    <div class="stat"><div class="stat-label">Expenses logged</div><div class="stat-value" id="statSpent">RM 0</div><div class="stat-note" id="statSpentNote">Nothing logged yet</div></div>
+    <div class="stat"><div class="stat-label">To-do progress</div><div class="stat-value" id="statPacking">0%</div><div class="progress"><span id="packingBar"></span></div></div>
+  </section>
+
+  <nav class="nav" aria-label="Main navigation">
+    <button class="active" data-tab="overview">Overview</button>
+    <button data-tab="itinerary">Itinerary</button>
+    <button data-tab="budget">Budget</button>
+    <button data-tab="packing">To-do list</button>
+    <button data-tab="bookings">Bookings</button>
+    <button data-tab="gallery">Food spots</button>
+    <button data-tab="guide">Travel guide</button>
+    <button data-tab="tools">Travel tools</button>
+  </nav>
+
+  <main>
+    <section class="panel active" id="panel-overview">
+      <div class="section-head"><div><h2>The journey</h2><p>Three places, one winter adventure.</p></div><button class="btn primary" data-goto="itinerary">Plan a day ↗</button></div>
+      <div class="destination-grid">
+        <article class="destination">
+          <div class="destination-photo"><img src="https://images.unsplash.com/photo-1538485399081-7191377e8241?auto=format&fit=crop&w=900&q=80" alt="Seoul city view" loading="lazy"><span>23–27 Dec · 2–5 Jan</span></div>
+          <div class="destination-body"><h3>Seoul</h3><p>City lights, shopping streets, palaces and cosy cafés.</p><span class="pill">Shopping</span><span class="pill">Culture</span><span class="pill">Cafés</span></div>
+        </article>
+        <article class="destination">
+          <div class="destination-photo"><img src="https://images.unsplash.com/photo-1517299321609-52687d1bc55a?auto=format&fit=crop&w=900&q=80" alt="Snowy ski resort" loading="lazy"><span>27–29 Dec</span></div>
+          <div class="destination-body"><h3>Vivaldi Park</h3><p>Snowy slopes, winter activities and a mountain stay.</p><span class="pill">Skiing</span><span class="pill">Snow</span><span class="pill">Resort</span></div>
+        </article>
+        <article class="destination">
+          <div class="destination-photo"><img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=900&q=80" alt="Korean traditional architecture" loading="lazy"><span>29 Dec – 2 Jan</span></div>
+          <div class="destination-body"><h3>Busan</h3><p>Coastal views, seafood, colourful neighbourhoods and slow mornings.</p><span class="pill">Coast</span><span class="pill">Food</span><span class="pill">Explore</span></div>
+        </article>
+      </div>
+      <div class="card" style="margin-top:18px;margin-bottom:18px">
+        <div class="card-head"><div><h3>Countdown to departure</h3><p class="muted small-text">Your winter adventure is getting closer.</p></div><span class="pill">23 Dec 2026</span></div>
+        <div class="result-big" id="countdownValue">Loading…</div><div class="meta" id="countdownNote">Days until your trip begins</div>
+      </div>
+      <div class="layout-two" style="margin-top:18px">
+        <div class="card">
+          <div class="card-head"><h3>Trip at a glance</h3><span class="pill">Winter 2026/27</span></div>
+          <div class="expense-list">
+            <div class="expense"><div><strong>23–27 December</strong><div class="meta">Arrive in Seoul · settle in and explore</div></div><a class="btn small" href="https://www.google.com/maps/search/Seoul+South+Korea" target="_blank" rel="noopener">Open map ↗</a></div>
+            <div class="expense"><div><strong>27–29 December</strong><div class="meta">Vivaldi Park · skiing and snow activities</div></div><a class="btn small" href="https://www.google.com/maps/search/Vivaldi+Park+South+Korea" target="_blank" rel="noopener">Open map ↗</a></div>
+            <div class="expense"><div><strong>29 December–2 January</strong><div class="meta">Busan · coast, food and sightseeing</div></div><a class="btn small" href="https://www.google.com/maps/search/Busan+South+Korea" target="_blank" rel="noopener">Open map ↗</a></div>
+            <div class="expense"><div><strong>2–5 January</strong><div class="meta">Back to Seoul · final shopping and flight home</div></div><a class="btn small" href="https://www.google.com/maps/search/Seoul+South+Korea" target="_blank" rel="noopener">Open map ↗</a></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Trip settings</h3>
+          <div class="field"><label for="tripName">Trip name</label><input id="tripName" value="South Korea Winter Escape"></div>
+          <div class="field-grid">
+            <div class="field"><label for="budgetInput">Budget (MYR)</label><input id="budgetInput" type="number" min="0" step="50" value="5000"></div>
+            <div class="field"><label for="currency">Display currency</label><select id="currency"><option value="MYR">MYR · RM</option><option value="KRW">KRW · ₩</option></select></div>
+          </div>
+          <p class="small-text muted">Your trip data saves in this browser automatically. Export a backup before changing devices.</p>
+          <button class="btn soft" id="saveSettings">Save trip settings</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-itinerary">
+      <div class="section-head"><div><h2>Day by day</h2><p>Make room for the things you don't want to miss.</p></div><button class="btn primary" id="addActivityBtn">＋ Add activity</button></div>
+      <div class="card">
+        <div class="day-toolbar">
+          <label for="daySelect" class="small-text muted">Choose a day</label>
+          <select id="daySelect" aria-label="Choose itinerary date"></select>
+          <span class="day-label" id="dayTitle"></span>
+        </div>
+        <div class="timeline" id="timeline"></div>
+        <div class="day-summary" id="daySummary"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-budget">
+      <div class="section-head"><div><h2>Budget & spending</h2><p>Keep an eye on the little things and the big ones.</p></div><button class="btn primary" id="addExpenseBtn">＋ Add expense</button></div>
+      <div class="layout-two">
+        <div class="card">
+          <h3>Expenses</h3>
+          <div id="expenseList" class="expense-list"></div>
+        </div>
+        <div class="card">
+          <div class="eyebrow">Your budget</div><div class="budget-big" id="budgetBig">RM 5,000</div>
+          <div class="budget-line"><span id="spentLabel">RM 0 spent</span><span id="remainingLabel">RM 5,000 left</span></div>
+          <div class="progress"><span id="budgetBar"></span></div>
+          <div class="category-bars" id="categoryBars"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-packing">
+      <div class="section-head"><div><h2>Before-you-go to-do list</h2><p>Keep track of the things to arrange before and during your Korea trip.</p></div><button class="btn primary" id="addPackingBtn">＋ Add task</button></div>
+      <div class="layout-two">
+        <div class="card"><div class="card-head"><h3>Your checklist</h3><span class="pill" id="packingCount">0 tasks</span></div><div class="check-progress"><span id="packingProgressText">0 of 0 completed</span><button class="btn small" id="clearPackedBtn">Remove completed</button></div><div id="packingList" class="checklist"></div></div>
+        <div class="card"><h3>Suggested things to do</h3><p class="muted">Starter tasks are already added to your checklist. Tick them off or add your own.</p><div class="expense-list">
+          <div class="expense"><div><strong>Travel documents</strong><div class="meta">Check passport validity, entry requirements and travel insurance.</div></div><span>✧</span></div>
+          <div class="expense"><div><strong>Bookings</strong><div class="meta">Confirm flights, hotels, Vivaldi Park stay/activities and private transfers.</div></div><span>⌂</span></div>
+          <div class="expense"><div><strong>Money & connectivity</strong><div class="meta">Plan cash exchange, cards, eSIM/roaming and transport payment.</div></div><span>₩</span></div>
+          <div class="expense"><div><strong>Before leaving</strong><div class="meta">Download offline maps, save emergency contacts and check weather.</div></div><span>❄</span></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-bookings">
+      <div class="section-head"><div><h2>Bookings & details</h2><p>Flights, hotels, trains, transfers and tickets — organised in one private trip list.</p></div><button class="btn primary" id="addBookingBtn">＋ Add booking</button></div>
+      <div class="sync-note" style="margin-bottom:16px"><strong>Account privacy:</strong> Cloud booking data is stored inside your trip record and protected by your Supabase sign-in and Row Level Security policies. Use only your own account, keep your devices locked, and sign out on any device other people can access. This website also keeps a local browser copy for offline use, so anyone using an already-unlocked browser profile may be able to see it. Do not store passport numbers, passwords or full payment-card details here.</div>
+      <div class="card" style="margin-bottom:16px"><div class="card-head"><div><h3>Your reservations</h3><p class="muted small-text">Add each reservation separately. You can edit or remove it later.</p></div><span class="pill" id="bookingCount">0 bookings</span></div><div id="bookingList" class="booking-list"><div class="empty">No bookings added yet. Choose “Add booking” to start.</div></div></div>
+      <details class="card"><summary style="cursor:pointer;font-weight:650">Existing trip notes (kept from your current version)</summary><p class="muted small-text">These older fields are preserved so existing details are not lost. New reservations should be added using “Add booking” above.</p>
+        <div class="booking-grid" style="margin-top:14px">
+          <div class="booking-card"><h4>✈ Flights</h4><div class="field"><label for="flightRoute">Route / airline</label><input id="flightRoute" data-booking="flightRoute" placeholder="e.g. KCH → ICN"></div><div class="field-grid"><div class="field"><label for="flightOut">Departure</label><input id="flightOut" data-booking="flightOut" type="datetime-local"></div><div class="field"><label for="flightReturn">Return</label><input id="flightReturn" data-booking="flightReturn" type="datetime-local"></div></div><div class="field"><label for="flightRef">Booking reference</label><input id="flightRef" data-booking="flightRef" placeholder="Add reference (optional)"></div><div class="field"><label for="flightNotes">Notes</label><textarea id="flightNotes" data-booking="flightNotes" placeholder="Terminal, baggage allowance, seat..."></textarea></div></div>
+          <div class="booking-card"><h4>⌂ Accommodation</h4><div class="field"><label for="hotelSeoul">Seoul hotel</label><input id="hotelSeoul" data-booking="hotelSeoul" placeholder="Hotel name and address"></div><div class="field"><label for="hotelSki">Vivaldi Park stay</label><input id="hotelSki" data-booking="hotelSki" placeholder="Resort / room details"></div><div class="field"><label for="hotelBusan">Busan hotel</label><input id="hotelBusan" data-booking="hotelBusan" placeholder="Hotel name and address"></div><div class="field"><label for="hotelNotes">Check-in / check-out notes</label><textarea id="hotelNotes" data-booking="hotelNotes" placeholder="Confirmation numbers, check-in times..."></textarea></div></div>
+          <div class="booking-card"><h4>🚆 Transport</h4><div class="field"><label for="transportKTX">KTX / train</label><input id="transportKTX" data-booking="transportKTX" placeholder="Train time, seats, booking link"></div><div class="field"><label for="transportTransfer">Private transfer</label><input id="transportTransfer" data-booking="transportTransfer" placeholder="Provider, pick-up details"></div><div class="field"><label for="transportLocal">Local transport</label><textarea id="transportLocal" data-booking="transportLocal" placeholder="T-money, airport transfer, taxi notes..."></textarea></div></div>
+          <div class="booking-card"><h4>♡ Important notes</h4><div class="field"><label for="emergencyNotes">Emergency contacts / reminders</label><textarea id="emergencyNotes" data-booking="emergencyNotes" placeholder="General reminders (avoid sensitive details)"></textarea></div></div>
+        </div>
+      </details>
+    </section>
+
+    <section class="panel" id="panel-gallery">
+      <div class="section-head"><div><h2>Food spots to save</h2><p>Starter ideas for Korean meals, markets and café stops. Check recent reviews, opening hours and holiday closures before visiting.</p></div><a class="btn" href="https://www.google.com/maps/search/Korean+food+Seoul+Busan" target="_blank" rel="noopener">Explore food on Maps ↗</a></div>
+      <div class="destination-grid">
+        <article class="destination"><div class="destination-photo"><img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=900&q=80" alt="Korean market food" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=900&q=80'"></div><div class="destination-body"><h3>Gwangjang Market</h3><p>Seoul · Market snacks such as bindaetteok, mayak gimbap and noodles.</p><a class="btn small" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Gwangjang+Market+Seoul">Open map ↗</a></div></article>
+        <article class="destination"><div class="destination-photo"><img src="https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&w=900&q=80" alt="Korean street food" loading="lazy"></div><div class="destination-body"><h3>Myeongdong street food</h3><p>Seoul · Easy evening stop for street snacks and shopping. Prices vary by stall.</p><a class="btn small" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Myeongdong+Street+Food+Seoul">Open map ↗</a></div></article>
+        <article class="destination"><div class="destination-photo"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=900&q=80" alt="Cafe food and drinks" loading="lazy"></div><div class="destination-body"><h3>Ikseon-dong cafés</h3><p>Seoul · Small cafés and dessert stops in pretty alleyways.</p><a class="btn small" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Ikseon-dong+cafes+Seoul">Open map ↗</a></div></article>
+        <article class="destination"><div class="destination-photo"><img src="https://images.unsplash.com/photo-1559737558-2f5a35f4523b?auto=format&fit=crop&w=900&q=80" alt="Seafood meal" loading="lazy"></div><div class="destination-body"><h3>Jagalchi Market</h3><p>Busan · Famous seafood market area; check menu prices before ordering.</p><a class="btn small" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Jagalchi+Market+Busan">Open map ↗</a></div></article>
+        <article class="destination"><div class="destination-photo"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80" alt="Korean meal" loading="lazy"></div><div class="destination-body"><h3>BIFF Square</h3><p>Busan · Street snacks and food stalls around Nampo-dong.</p><a class="btn small" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=BIFF+Square+Busan+food">Open map ↗</a></div></article>
+        <article class="destination"><div class="destination-photo"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80" alt="Warm Korean soup meal" loading="lazy"></div><div class="destination-body"><h3>Busan gukbap</h3><p>Busan · Try dwaeji-gukbap, a local pork-and-rice soup specialty.</p><a class="btn small" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Busan+dwaeji+gukbap">Open map ↗</a></div></article>
+      </div>
+      <div class="card" style="margin-top:18px"><h3>Add your own food spot</h3><p class="muted small-text">Save a restaurant, café or dish you want to try. This list is saved in this browser.</p><div class="field-grid"><div class="field"><label for="foodSpotName">Name / dish</label><input id="foodSpotName" placeholder="e.g. tteokbokki place from TikTok"></div><div class="field"><label for="foodSpotArea">Area</label><input id="foodSpotArea" placeholder="e.g. Hongdae, Seoul"></div></div><div class="field"><label for="foodSpotNotes">Notes (optional)</label><input id="foodSpotNotes" placeholder="Must-try dish, price, reservation…"></div><button class="btn primary" id="addFoodSpotBtn">＋ Save food spot</button><div id="savedFoodSpots" class="expense-list" style="margin-top:14px"></div></div>
+    </section>
+
+    <section class="panel" id="panel-guide">
+      <div class="section-head"><div><h2>Korea travel guide</h2><p>Useful apps, practical winter tips and emergency contacts to keep close.</p></div><a class="btn" href="https://www.kln.gov.my/web/kor_seoul/home" target="_blank" rel="noopener">Official Malaysian Embassy page ↗</a></div>
+      <div class="layout-two">
+        <div class="card"><div class="eyebrow">01 · Emergency contacts</div><h3>Save these before departure</h3>
+          <div class="expense-list">
+            <div class="expense"><div><strong>Malaysia Embassy, Seoul</strong><div class="meta">General line: +82 2-2077-8600<br>Emergency: +82 10-8974-8699<br>129, Dokseodang-ro, Hannam-dong, Yongsan-gu, Seoul</div><div class="meta"><a href="mailto:mwseoul@kln.gov.my">mwseoul@kln.gov.my</a> · <a href="https://www.kln.gov.my/web/kor_seoul/home" target="_blank" rel="noopener">Official details ↗</a></div></div><span>🇲🇾</span></div>
+            <div class="expense"><div><strong>Police — 112</strong><div class="meta">For police emergencies.</div></div><a class="btn small" href="tel:112">Call 112</a></div>
+            <div class="expense"><div><strong>Fire / ambulance — 119</strong><div class="meta">For fire and medical emergencies.</div></div><a class="btn small" href="tel:119">Call 119</a></div>
+            <div class="expense"><div><strong>Korea Travel Hotline — 1330</strong><div class="meta">Tourist information and interpretation; Malay-language support is listed by the Korea Tourism Organization. Availability of languages/hours may vary.</div><a class="btn small" target="_blank" rel="noopener" href="https://english.visitkorea.or.kr/svc/contents/infoHtmlView.do?menuSn=454&vcontsId=140632">Official hotline info ↗</a></div><span>☎</span></div>
+          </div><p class="small-text muted">Save these details offline. Confirm contact numbers on the official Embassy website shortly before travel.</p>
+        </div>
+        <div class="card"><div class="eyebrow">02 · Apps to download</div><h3>Useful Korea travel apps</h3><div class="expense-list">
+          <div class="expense"><div><strong>Naver Map</strong><div class="meta">Local maps, walking routes and transit directions.</div></div><a class="btn small" target="_blank" rel="noopener" href="https://map.naver.com/">Open ↗</a></div>
+          <div class="expense"><div><strong>Papago</strong><div class="meta">Translate Korean text, menus and conversations; download language options if available.</div></div><a class="btn small" target="_blank" rel="noopener" href="https://papago.naver.com/">Open ↗</a></div>
+          <div class="expense"><div><strong>Kakao T</strong><div class="meta">Taxi booking; set up and check payment/verification requirements before you need a ride.</div></div><a class="btn small" target="_blank" rel="noopener" href="https://service.kakaomobility.com/">Open ↗</a></div>
+          <div class="expense"><div><strong>KakaoTalk</strong><div class="meta">Common messaging app; useful for contacting some businesses and hosts.</div></div><a class="btn small" target="_blank" rel="noopener" href="https://www.kakaocorp.com/page/service/service/KakaoTalk">Open ↗</a></div>
+          <div class="expense"><div><strong>Subway Korea / Korail</strong><div class="meta">For subway routes and train planning. Check KTX bookings through the official Korail channel.</div></div><a class="btn small" target="_blank" rel="noopener" href="https://www.letskorail.com/">Korail ↗</a></div>
+        </div></div>
+      </div>
+      <div class="card" style="margin-top:18px"><div class="eyebrow">03 · Little things that help</div><h3>Practical travel tips</h3><div class="layout-two"><div><ul><li><strong>Transport:</strong> check whether a T-money or other transport card suits your routes; keep a little cash for top-ups if needed.</li><li><strong>Maps:</strong> save hotel addresses in Korean and download offline map areas before you leave.</li><li><strong>Connectivity:</strong> arrange an eSIM, SIM or roaming plan and keep your hotel address accessible offline.</li><li><strong>Money:</strong> carry more than one payment method and separate backup cash from your wallet.</li><li><strong>Etiquette:</strong> check queueing, dining and temple/palace rules; remove shoes where signs or hosts ask.</li></ul></div><div><ul><li><strong>Winter:</strong> use thermal layers, insulated gloves, warm socks, a beanie, lip balm and shoes with grip. Vivaldi Park can feel colder than Seoul.</li><li><strong>Snow & ice:</strong> walk slowly, watch for slippery pavement and leave extra travel time during snowfall.</li><li><strong>Food:</strong> mention allergies clearly; use Papago to translate dietary needs and confirm ingredients with staff.</li><li><strong>Bookings:</strong> recheck holiday opening hours and reservation confirmations, especially around Christmas and New Year.</li><li><strong>Safety:</strong> share your itinerary with someone you trust and keep emergency contacts and travel insurance details offline.</li></ul></div></div></div>
+    </section>
+
+    <section class="panel" id="panel-tools">
+      <div class="section-head"><div><h2>Your travel toolkit</h2><p>Maps, weather planning, currency and a quick checklist for travelling days.</p></div><button class="btn primary" id="travelModeBtn">☼ Toggle travel mode</button></div>
+      <div class="tool-grid">
+        <div class="tool-card">
+          <div class="eyebrow">01 · Explore</div><h3>Maps & directions</h3><p>Search any place or open the main destinations. Activity locations in your itinerary also link directly to Google Maps.</p>
+          <div class="field"><label for="mapSearch">Place or address</label><input class="tool-input" id="mapSearch" placeholder="e.g. Gyeongbokgung Palace"></div>
+          <div class="tool-row"><button class="btn primary" id="mapSearchBtn">Search Google Maps ↗</button><button class="btn" id="routeBtn">Seoul → Busan ↗</button></div>
+          <div class="weather-list"><a class="weather-place" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Seoul+South+Korea"><strong>Seoul</strong><small>Open map ↗</small></a><a class="weather-place" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Vivaldi+Park+Hongcheon"><strong>Vivaldi Park</strong><small>Open map ↗</small></a><a class="weather-place" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Busan+South+Korea"><strong>Busan</strong><small>Open map ↗</small></a></div>
+        </div>
+        <div class="tool-card">
+          <div class="eyebrow">02 · Prepare</div><h3>Weather & snow outlook</h3><p>Long-range forecasts for 23 December–5 January are not reliable yet. Forecasts usually become more useful closer to departure; snow conditions at Vivaldi Park can change quickly.</p>
+          <div class="sync-note" id="weatherStatus">Loading near-term weather… Long-range forecasts for late December are not available yet.</div><div class="weather-list" id="weatherLive"><div class="weather-place">Seoul<br><small>Loading…</small></div><div class="weather-place">Vivaldi Park<br><small>Loading…</small></div><div class="weather-place">Busan<br><small>Loading…</small></div></div>
+          <div class="weather-list">
+            <a class="weather-place" target="_blank" rel="noopener" href="https://www.google.com/search?q=Seoul+weather+forecast"><strong>Seoul</strong><small>Check forecast ↗</small></a>
+            <a class="weather-place" target="_blank" rel="noopener" href="https://www.google.com/search?q=Vivaldi+Park+snow+forecast"><strong>Vivaldi Park</strong><small>Snow conditions ↗</small></a>
+            <a class="weather-place" target="_blank" rel="noopener" href="https://www.google.com/search?q=Busan+weather+forecast"><strong>Busan</strong><small>Check forecast ↗</small></a>
+          </div>
+          <p class="small-text"><strong>Winter reminder:</strong> thermal base layers, insulated coat, gloves, beanie, scarf, thick socks, lip balm and waterproof shoes. Add hand warmers for the ski resort.</p>
+        </div>
+        <div class="tool-card">
+          <div class="eyebrow">03 · Spend wisely</div><h3>KRW ↔ MYR converter</h3><p>Indicative mid-market rate; your money changer may offer a different rate and fees.</p>
+          <div class="field"><label for="fxAmount">Amount</label><input class="tool-input" id="fxAmount" type="number" min="0" step="any" value="100000"></div>
+          <div class="field-grid"><div class="field"><label for="fxFrom">From</label><select id="fxFrom" class="tool-input"><option value="KRW">KRW · ₩</option><option value="MYR">MYR · RM</option></select></div><div class="field"><label for="fxTo">To</label><select id="fxTo" class="tool-input"><option value="MYR">MYR · RM</option><option value="KRW">KRW · ₩</option></select></div></div>
+          <div class="result-big" id="fxResult">Checking rate…</div><div class="meta" id="fxRateNote">Rate source will be shown here.</div>
+          <div class="tool-row" style="margin-top:12px"><button class="btn primary" id="convertBtn">Convert</button><button class="btn" id="refreshRateBtn">Refresh rate</button></div>
+          <div class="field" style="margin-top:14px"><label for="dailyBudget">Daily budget (MYR)</label><input class="tool-input" id="dailyBudget" type="number" min="0" step="10" value="250"></div>
+          <p class="small-text muted" id="dailyBudgetNote">Daily budget is a planning target, not an exchange quote.</p>
+        </div>
+        <div class="tool-card">
+          <div class="eyebrow">04 · Travel day</div><h3>Today's quick checklist</h3><p>Choose a date and tick off the essentials. Your progress saves in this browser.</p>
+          <div class="field"><label for="checkDate">Travel date</label><select id="checkDate" class="tool-input"></select></div>
+          <div class="checklist-day" id="dailyChecklist"></div>
+          <div class="tool-row" style="margin-top:12px"><button class="btn" id="resetDayChecklist">Reset this day</button><button class="btn primary" id="openBookingsBtn">Open bookings</button></div>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="eyebrow">05 · Keep it safe</div><h3>Backups & cross-device sync</h3>
+        <p>Sign in with the same email on your computer and phone to access the same itinerary. Your edits save in this browser and sync to your account when signed in. Local browser data may remain visible to anyone using this browser profile, so keep your device locked and sign out on shared devices.</p>
+        <div class="sync-note" id="cloudStatus" role="status" aria-live="polite"><strong>Cloud sync not connected.</strong> Export a backup before signing in for the first time.</div>
+        <div class="field" style="margin-top:12px"><label for="cloudEmail">Email address</label><input class="tool-input" id="cloudEmail" type="email" autocomplete="email" placeholder="you@example.com"></div>
+        <div class="field"><label for="cloudPassword">Password</label><input class="tool-input" id="cloudPassword" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters"></div>
+        <div class="tool-row" style="margin-top:12px"><button class="btn primary" id="cloudSignInBtn">Sign in</button><button class="btn" id="cloudSignUpBtn">Create account</button></div>
+        <div class="tool-row" style="margin-top:8px"><button class="btn" id="cloudSyncNowBtn" disabled>Sync now</button><button class="btn" id="cloudSignOutBtn" disabled>Sign out</button><button class="btn" id="exportBackupBtn">Export trip backup ↗</button></div>
+        <p class="small-text muted" style="margin-top:10px">Use the same account on each device. Do not use a shared/public computer for sign-in. If a cloud copy already exists, the site will ask before replacing local data. Cloud syncing requires an internet connection; keep periodic JSON backups too.</p>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">MADE FOR THE MEMORIES · Local browser copy plus Supabase cloud sync · Keep a backup</footer>
+</div>
+
+<div class="modal-backdrop" id="bookingModal" role="dialog" aria-modal="true" aria-labelledby="bookingModalTitle">
+  <div class="modal"><div class="modal-top"><h3 id="bookingModalTitle">Add a booking</h3><button class="icon-btn" id="closeBookingModal" aria-label="Close">✕</button></div>
+    <form id="bookingForm"><input type="hidden" id="bookingId">
+      <div class="field-grid"><div class="field"><label for="bookingType">Booking type *</label><select id="bookingType" required><option>Flight</option><option>Hotel</option><option>Train / KTX</option><option>Airport transfer</option><option>Private transfer</option><option>Activity / attraction</option><option>Ski / resort</option><option>Restaurant</option><option>Other</option></select></div><div class="field"><label for="bookingStatus">Status</label><select id="bookingStatus"><option>Planned</option><option>Booked</option><option>Paid</option><option>Cancelled</option></select></div></div>
+      <div class="field"><label for="bookingTitle">Booking name / provider *</label><input id="bookingTitle" required maxlength="140" placeholder="e.g. Singapore Airlines flight to Seoul"></div>
+      <div class="field-grid"><div class="field"><label for="bookingStart">Start date & time</label><input id="bookingStart" type="datetime-local"></div><div class="field"><label for="bookingEnd">End date & time</label><input id="bookingEnd" type="datetime-local"></div></div>
+      <div class="field"><label for="bookingLocation">Location / route</label><input id="bookingLocation" maxlength="220" placeholder="e.g. KCH → SIN → ICN"></div>
+      <div class="field-grid"><div class="field"><label for="bookingReference">Confirmation reference</label><input id="bookingReference" maxlength="100" autocomplete="off" placeholder="Optional — store only what you need"></div><div class="field"><label for="bookingCost">Estimated / paid cost (RM)</label><input id="bookingCost" type="number" min="0" step="0.01" placeholder="0.00"></div></div>
+      <div class="field"><label for="bookingLink">Official booking link (optional)</label><input id="bookingLink" type="url" maxlength="500" placeholder="https://..."></div>
+      <div class="field"><label for="bookingNotes">Notes</label><textarea id="bookingNotes" maxlength="2000" placeholder="Seat, baggage, check-in time, cancellation deadline, pickup instructions…"></textarea></div>
+      <p class="small-text muted">Do not enter passwords, full card numbers, passport numbers or private identity documents.</p>
+      <div class="modal-actions"><button type="button" class="btn" id="cancelBooking">Cancel</button><button class="btn primary" type="submit">Save booking</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="activityModal" role="dialog" aria-modal="true" aria-labelledby="activityModalTitle">
+  <div class="modal">
+    <div class="modal-top"><h3 id="activityModalTitle">Add an activity</h3><button class="icon-btn" id="closeActivityModal" aria-label="Close">✕</button></div>
+    <form id="activityForm">
+      <input type="hidden" id="activityId">
+      <div class="field"><label for="activityTitle">Activity name *</label><input id="activityTitle" required maxlength="100" placeholder="e.g. Explore Myeongdong"></div>
+      <div class="field-grid">
+        <div class="field"><label for="activityDate">Date *</label><input id="activityDate" type="date" min="2026-12-23" max="2027-01-05" required></div>
+        <div class="field"><label for="activityTime">Time</label><input id="activityTime" type="time"></div>
+      </div>
+      <div class="field"><label for="activityLocation">Location</label><input id="activityLocation" placeholder="Place or address"></div>
+      <div class="field"><label for="activityCost">Estimated cost (MYR)</label><input id="activityCost" type="number" min="0" step="0.01" value="0"></div>
+      <div class="field"><label for="activityNotes">Notes</label><textarea id="activityNotes" placeholder="Reservation details, ideas, reminders..."></textarea></div>
+      <div class="modal-actions"><button type="button" class="btn" id="cancelActivity">Cancel</button><button class="btn primary" type="submit">Save activity</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="expenseModal" role="dialog" aria-modal="true" aria-labelledby="expenseModalTitle">
+  <div class="modal">
+    <div class="modal-top"><h3 id="expenseModalTitle">Add an expense</h3><button class="icon-btn" id="closeExpenseModal" aria-label="Close">✕</button></div>
+    <form id="expenseForm">
+      <input type="hidden" id="expenseId">
+      <div class="field"><label for="expenseTitle">Expense *</label><input id="expenseTitle" required maxlength="100" placeholder="e.g. KTX tickets"></div>
+      <div class="field-grid">
+        <div class="field"><label for="expenseAmount">Amount (MYR) *</label><input id="expenseAmount" type="number" min="0" step="0.01" required></div>
+        <div class="field"><label for="expenseCategory">Category</label><select id="expenseCategory"><option>Flights</option><option>Accommodation</option><option>Transport</option><option>Food</option><option>Shopping</option><option>Activities</option><option>Other</option></select></div>
+      </div>
+      <div class="field"><label for="expenseDate">Date</label><input id="expenseDate" type="date" min="2026-12-23" max="2027-01-05" value="2026-12-23"></div>
+      <div class="field"><label for="expenseNotes">Notes</label><input id="expenseNotes" placeholder="Optional note"></div>
+      <div class="modal-actions"><button type="button" class="btn" id="cancelExpense">Cancel</button><button class="btn primary" type="submit">Save expense</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="packingModal" role="dialog" aria-modal="true" aria-labelledby="packingModalTitle">
+  <div class="modal">
+    <div class="modal-top"><h3 id="packingModalTitle">Add a to-do task</h3><button class="icon-btn" id="closePackingModal" aria-label="Close">✕</button></div>
+    <form id="packingForm"><div class="field"><label for="packingText">Task *</label><input id="packingText" required maxlength="100" placeholder="e.g. Book airport transfer"></div>
+    <div class="modal-actions"><button type="button" class="btn" id="cancelPacking">Cancel</button><button class="btn primary" type="submit">Add task</button></div></form>
+  </div>
+</div>
+<button class="btn primary mobile-travel-toggle" id="floatingTravelMode" type="button">☼ Travel mode</button>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+'use strict';
+const STORAGE_KEY='myTravelJournalSouthKorea_v1';
+const START='2026-12-23', END='2027-01-05';
+const CURRENCY={MYR:'RM',KRW:'₩'};
+// Public browser configuration. Security is enforced by Supabase Auth + Row Level Security.
+const SUPABASE_URL='https://aexqeywtmuxyzdwpmgmw.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_QYizsB0d2xeQYPXBmTepDg_5R-jKbH3';
+const cloudClient=(window.supabase&&window.supabase.createClient)?window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}}):null;
+let cloudUser=null,cloudSyncReady=false,cloudSaveTimer=null,cloudOperation=false;
+const $=id=>document.getElementById(id);
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const dateList=()=>{const out=[];let d=new Date(START+'T12:00:00'),end=new Date(END+'T12:00:00');while(d<=end){out.push(localISO(d));d.setDate(d.getDate()+1)}return out};
+const localISO=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const fmtDate=(iso,opts={weekday:'short',day:'numeric',month:'short'})=>new Date(iso+'T12:00:00').toLocaleDateString('en-GB',opts);
+const money=n=>`${CURRENCY[state.settings.currency]||'RM'} ${Number(n||0).toLocaleString('en-MY',{minimumFractionDigits:0,maximumFractionDigits:2})}`;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const defaultState=()=>({
+ settings:{name:'South Korea Winter Escape',budget:5000,currency:'MYR'},
+ activities:[
+  {id:uid(),date:'2026-12-23',time:'20:00',title:'Arrive in Seoul',location:'Incheon International Airport',cost:0,notes:'Immigration, collect luggage and transfer to hotel.'},
+  {id:uid(),date:'2026-12-24',time:'10:00',title:'Slow morning and café stop',location:'Seoul',cost:35,notes:'Keep the first day flexible after travelling.'},
+  {id:uid(),date:'2026-12-25',time:'10:00',title:'Explore Gyeongbokgung area',location:'Gyeongbokgung Palace, Seoul',cost:25,notes:'Check holiday opening hours before visiting.'},
+  {id:uid(),date:'2026-12-26',time:'14:00',title:'Shopping and street food',location:'Myeongdong, Seoul',cost:100,notes:'Leave room in the budget for shopping.'},
+  {id:uid(),date:'2026-12-27',time:'09:00',title:'Transfer to Vivaldi Park',location:'Vivaldi Park, Hongcheon',cost:0,notes:'Confirm private transfer pick-up details.'},
+  {id:uid(),date:'2026-12-28',time:'09:00',title:'Ski day',location:'Vivaldi Park Ski World',cost:250,notes:'Check lift pass, rental and lesson prices.'},
+  {id:uid(),date:'2026-12-29',time:'10:00',title:'Travel to Busan',location:'Busan, South Korea',cost:0,notes:'Confirm transfer back to Seoul and KTX booking.'},
+  {id:uid(),date:'2026-12-30',time:'10:00',title:'Explore Busan',location:'Busan',cost:80,notes:'Choose attractions based on the weather.'},
+  {id:uid(),date:'2026-12-31',time:'17:00',title:'New Year’s Eve dinner',location:'Busan',cost:120,notes:'Book ahead if you want a special dinner.'},
+  {id:uid(),date:'2027-01-01',time:'11:00',title:'Easy New Year’s Day',location:'Busan',cost:50,notes:'Check public holiday opening times.'},
+  {id:uid(),date:'2027-01-02',time:'09:00',title:'Return to Seoul',location:'Busan Station → Seoul Station',cost:0,notes:'Allow time to get to the station.'},
+  {id:uid(),date:'2027-01-03',time:'11:00',title:'Final shopping day',location:'Seoul',cost:150,notes:'Keep receipts and check luggage weight.'},
+  {id:uid(),date:'2027-01-04',time:'10:00',title:'Last cafés and packing',location:'Seoul',cost:60,notes:'Check flight time and airport transfer.'},
+  {id:uid(),date:'2027-01-05',time:'08:00',title:'Check out and depart',location:'Incheon International Airport',cost:0,notes:'Confirm departure terminal and travel time.'}
+ ],
+ expenses:[],
+ todos:[
+  {id:uid(),text:'Check passport validity and entry requirements',done:false},
+  {id:uid(),text:'Confirm flights and save e-tickets offline',done:false},
+  {id:uid(),text:'Confirm all hotel reservations',done:false},
+  {id:uid(),text:'Confirm Vivaldi Park stay, ski rental and transfers',done:false},
+  {id:uid(),text:'Book KTX tickets and check luggage rules',done:false},
+  {id:uid(),text:'Arrange travel insurance',done:false},
+  {id:uid(),text:'Choose eSIM / SIM / roaming plan',done:false},
+  {id:uid(),text:'Install Naver Map, Papago and Kakao T',done:false},
+  {id:uid(),text:'Save Malaysia Embassy and emergency numbers',done:false},
+  {id:uid(),text:'Exchange some MYR to KRW and plan card use',done:false},
+  {id:uid(),text:'Check winter weather and prepare cold-weather clothing',done:false},
+  {id:uid(),text:'Save hotel addresses in Korean and offline maps',done:false},
+  {id:uid(),text:'Check attraction hours and make restaurant reservations',done:false},
+  {id:uid(),text:'Weigh luggage and check airline baggage allowance',done:false}
+ ],
+ foodSpots:[],
+ packing:[
+  {id:uid(),text:'Passport and travel documents',done:false},{id:uid(),text:'Flight and hotel confirmations',done:false},
+  {id:uid(),text:'Travel insurance details',done:false},{id:uid(),text:'Thermal base layers',done:false},
+  {id:uid(),text:'Winter coat and sweaters',done:false},{id:uid(),text:'Gloves, beanie and scarf',done:false},
+  {id:uid(),text:'Thick socks and comfortable shoes',done:false},{id:uid(),text:'Waterproof shoes for snow',done:false},
+  {id:uid(),text:'Skincare and lip balm',done:false},{id:uid(),text:'Phone charger and power bank',done:false},
+  {id:uid(),text:'Travel adapter',done:false},{id:uid(),text:'Medication and personal essentials',done:false},
+  {id:uid(),text:'Small day bag',done:false},{id:uid(),text:'T-money card / transport plan',done:false}
+ ],
+ bookings:{},bookingItems:[],dailyChecks:{},fx:{rate:null,date:null},dailyBudget:250
+});
+let state;
+try{const saved=localStorage.getItem(STORAGE_KEY);state=saved?mergeState(defaultState(),JSON.parse(saved)):defaultState()}catch(e){state=defaultState()}
+function mergeState(base,loaded){
+ if(!loaded||typeof loaded!=='object')return base;
+ return {settings:{...base.settings,...(loaded.settings||{})},activities:Array.isArray(loaded.activities)?loaded.activities:base.activities,expenses:Array.isArray(loaded.expenses)?loaded.expenses:base.expenses,todos:Array.isArray(loaded.todos)?loaded.todos:base.todos,foodSpots:Array.isArray(loaded.foodSpots)?loaded.foodSpots:base.foodSpots,packing:Array.isArray(loaded.packing)?loaded.packing:base.packing,bookings:{...base.bookings,...(loaded.bookings||{})},bookingItems:Array.isArray(loaded.bookingItems)?loaded.bookingItems:[],dailyChecks:{...(loaded.dailyChecks||{})},fx:{...(loaded.fx||{})},dailyBudget:loaded.dailyBudget??base.dailyBudget};
+}
+let selectedDate=START,toastTimer;
+function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){showToast('Could not save locally. Export a backup.')}renderStats();if(cloudSyncReady&&cloudUser)scheduleCloudSave()}
+function setCloudStatus(message){const el=$('cloudStatus');if(el)el.innerHTML=message}
+function setCloudButtons(signedIn){$('cloudSignInBtn').disabled=!!signedIn;$('cloudSignUpBtn').disabled=!!signedIn;$('cloudSyncNowBtn').disabled=!signedIn;$('cloudSignOutBtn').disabled=!signedIn}
+function scheduleCloudSave(){clearTimeout(cloudSaveTimer);cloudSaveTimer=setTimeout(()=>saveCloudState(false),900)}
+async function saveCloudState(showMessage=true){if(!cloudClient||!cloudUser)return;clearTimeout(cloudSaveTimer);try{const {error}=await cloudClient.from('travel_journal').upsert({user_id:cloudUser.id,trip_data:state,updated_at:new Date().toISOString()},{onConflict:'user_id'});if(error)throw error;localStorage.setItem('travelJournalCloudSynced_'+cloudUser.id,'1');if(showMessage){setCloudStatus('<strong>Synced successfully.</strong> Your latest trip data is saved to your cloud account.');showToast('Trip synced to cloud.')}else setCloudStatus('<strong>Cloud sync is on.</strong> Your changes are saved on this device and synced when online.')}catch(err){console.error('Cloud save failed',err);setCloudStatus('<strong>Cloud sync failed.</strong> Your data is still saved locally. Check your connection and database settings, then try Sync now.');if(showMessage)showToast('Cloud sync failed; local data is safe.')}}
+function renderAllFromState(){renderDateSelect();loadSettings();renderItinerary();renderBudget();renderPacking();renderFoodSpots();renderBookings();renderStats();renderCountdown();fillDailyDateSelect();renderDailyChecklist();$('dailyBudget').value=state.dailyBudget??250;convertFx()}
+async function loadCloudState(){if(!cloudClient||!cloudUser)return;cloudSyncReady=false;try{const {data,error}=await cloudClient.from('travel_journal').select('trip_data,updated_at').eq('user_id',cloudUser.id).maybeSingle();if(error)throw error;
+ if(data&&data.trip_data){const hasLocal=!!localStorage.getItem(STORAGE_KEY),alreadyLinked=localStorage.getItem('travelJournalCloudSynced_'+cloudUser.id)==='1';let choice='cloud';if(hasLocal&&!alreadyLinked){choice=confirm('A cloud itinerary already exists for this account. Click OK to load the cloud copy onto this device, or Cancel to keep this device’s data and upload it to the cloud. Export a backup first if unsure.')?'cloud':'local'}if(choice==='cloud'){state=mergeState(defaultState(),data.trip_data);localStorage.setItem(STORAGE_KEY,JSON.stringify(state));renderAllFromState()}else{await saveCloudState(false)}localStorage.setItem('travelJournalCloudSynced_'+cloudUser.id,'1');cloudSyncReady=true;setCloudStatus('<strong>Signed in and synced.</strong> Using your cloud itinerary. Last cloud update: '+new Date(data.updated_at).toLocaleString());}
+ else {const shouldUpload=confirm('No cloud itinerary exists for this account yet. Upload the itinerary currently on this device to your cloud account? Choose Cancel to stay signed in without syncing yet.');if(shouldUpload){cloudSyncReady=true;await saveCloudState(true)}else{cloudSyncReady=false;setCloudStatus('<strong>Signed in, sync paused.</strong> Your current device data has not been uploaded. Export a backup before choosing to sync later.')}}
+ }catch(err){console.error('Cloud load failed',err);cloudSyncReady=false;setCloudStatus('<strong>Could not load cloud data.</strong> Your local itinerary has not been replaced. Check the table and security policies, then try signing in again.')}}
+async function onCloudSignIn(){if(!cloudClient){setCloudStatus('<strong>Connection library failed to load.</strong> Check your internet connection and refresh the page.');return}const email=$('cloudEmail').value.trim(),password=$('cloudPassword').value;if(!email||!password){showToast('Enter your email and password first.');return}try{$('cloudSignInBtn').disabled=true;const {data,error}=await cloudClient.auth.signInWithPassword({email,password});if(error)throw error;cloudUser=data.user;setCloudButtons(true);await loadCloudState()}catch(err){console.error(err);setCloudStatus('<strong>Sign-in failed.</strong> '+esc(err.message||'Check your email and password.'));setCloudButtons(false)}}
+async function onCloudSignUp(){if(!cloudClient){setCloudStatus('<strong>Connection library failed to load.</strong> Check your internet connection and refresh the page.');return}const email=$('cloudEmail').value.trim(),password=$('cloudPassword').value;if(!email||!password){showToast('Enter your email and password first.');return}if(password.length<8){showToast('Use a password with at least 8 characters.');return}try{$('cloudSignUpBtn').disabled=true;const {data,error}=await cloudClient.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});if(error)throw error;if(data.session){cloudUser=data.user;setCloudButtons(true);await loadCloudState()}else{setCloudStatus('<strong>Check your email to confirm your account.</strong> After confirming, return here and sign in with the same email and password.');setCloudButtons(false)}}catch(err){console.error(err);setCloudStatus('<strong>Account creation failed.</strong> '+esc(err.message||'Please try again.'));setCloudButtons(false)}}
+async function onCloudSignOut(){if(!cloudClient)return;cloudSyncReady=false;const {error}=await cloudClient.auth.signOut();if(error){setCloudStatus('<strong>Sign-out failed.</strong> '+esc(error.message));return}cloudUser=null;setCloudButtons(false);setCloudStatus('<strong>Signed out.</strong> Your itinerary remains saved in this browser.')}
+function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2400)}
+function openModal(id){$(id).classList.add('open');const first=$(id).querySelector('input:not([type=hidden]),select,textarea');if(first)setTimeout(()=>first.focus(),50)}
+function closeModal(id){$(id).classList.remove('open')}
+function switchTab(tab){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+tab));if(tab==='itinerary')renderItinerary();if(tab==='budget')renderBudget();if(tab==='packing')renderPacking();if(tab==='gallery')renderFoodSpots();if(tab==='bookings')renderBookings();if(tab==='tools'){fillDailyDateSelect();convertFx();}window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.goto)));
+async function loadWeather(){
+ const places=[{name:'Seoul',lat:37.5665,lon:126.9780},{name:'Vivaldi Park',lat:37.6450,lon:127.6810},{name:'Busan',lat:35.1796,lon:129.0756}];
+ try{const results=await Promise.all(places.map(async p=>{const url=`https://api.open-meteo.com/v1/forecast?latitude=${p.lat}&longitude=${p.lon}&current=temperature_2m,precipitation,snowfall&daily=temperature_2m_min,temperature_2m_max,snowfall_sum&temperature_unit=celsius&forecast_days=7&timezone=Asia%2FSeoul`;const r=await fetch(url);if(!r.ok)throw new Error('Weather unavailable');return {place:p,data:await r.json()}}));
+ $('weatherLive').innerHTML=results.map(({place:p,data:d})=>{const c=d.current||{},daily=d.daily||{},snow=Array.isArray(daily.snowfall_sum)?Math.max(0,...daily.snowfall_sum):0;return `<div class="weather-place"><strong>${p.name}</strong><div class="result-big" style="font-size:25px">${Number.isFinite(c.temperature_2m)?Math.round(c.temperature_2m)+'°C':'—'}</div><small>Now · next 7-day snow total up to ${snow.toFixed(1)} cm</small><div class="meta" style="margin-top:5px">Forecast only; mountain conditions can vary.</div></div>`}).join('');
+ $('weatherStatus').textContent='Near-term conditions loaded from Open-Meteo. This is not a forecast for your late-December travel dates; check again closer to departure.';
+ }catch(e){$('weatherStatus').textContent='Live weather could not load. Check your internet connection, or use the forecast links below. Late-December forecasts are not reliable this far ahead.'}
+}
+function renderCountdown(){
+ const start=new Date(START+'T00:00:00');const now=new Date();const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());const days=Math.ceil((start-today)/86400000);
+ $('countdownValue').textContent=days>0?`${days} days to go`:days===0?'Your trip starts today!':'Trip dates have passed';
+ $('countdownNote').textContent=days>0?'Until 23 December 2026':days===0?'Have a wonderful trip.':'Update your dates for your next adventure.';
+}
+function fillDailyDateSelect(){const sel=$('checkDate');sel.innerHTML=dateList().map(d=>`<option value="${d}">${fmtDate(d,{weekday:'short',day:'numeric',month:'short'})}</option>`).join('');sel.value=selectedDate;renderDailyChecklist()}
+const DAILY_ITEMS=[['passport','Passport / ID'],['tickets','Tickets & booking confirmations'],['wallet','Wallet, cards & cash'],['phone','Phone & power bank'],['transport','Transport plan / T-money'],['layers','Warm layers & gloves'],['water','Water & any essentials'],['checkin','Check next booking / check-in']];
+function renderDailyChecklist(){const d=$('checkDate').value||selectedDate;const checks=state.dailyChecks[d]||{};$('dailyChecklist').innerHTML=DAILY_ITEMS.map(([id,label])=>`<label class="day-check"><input type="checkbox" data-daily-check="${id}" ${checks[id]?'checked':''}> <span>${label}</span></label>`).join('');$('dailyChecklist').querySelectorAll('[data-daily-check]').forEach(c=>c.addEventListener('change',()=>{const date=$('checkDate').value;state.dailyChecks[date]=state.dailyChecks[date]||{};state.dailyChecks[date][c.dataset.dailyCheck]=c.checked;persist()}))}
+let liveRate=null;
+async function refreshFxRate(){ $('fxRateNote').textContent='Fetching indicative mid-market rate…';try{const from=$('fxFrom').value,to=$('fxTo').value;const base=from;const response=await fetch(`https://open.er-api.com/v6/latest/${encodeURIComponent(from)}`);if(!response.ok)throw new Error('Rate unavailable');const data=await response.json();if(data.result!=='success'||!data.rates||!data.rates[to])throw new Error('Rate unavailable');liveRate=Number(data.rates[to]);const date=(data.time_last_update_utc||'').slice(0,16)||'latest available';state.fx={rate:liveRate,date,from,to};persist();convertFx();$('fxRateNote').textContent=`Indicative rate updated ${date}: 1 ${from} = ${liveRate.toLocaleString('en-MY',{maximumFractionDigits:6})} ${to}. Money changer rates/fees differ.`}catch(e){liveRate=null;$('fxRateNote').textContent='Could not load a live rate. Check your internet connection; the converter will still use a saved rate if available.';if(state.fx&&state.fx.rate){liveRate=Number(state.fx.rate);convertFx()}}}
+function convertFx(){const amount=Math.max(0,Number($('fxAmount').value)||0),from=$('fxFrom').value,to=$('fxTo').value;if(from===to){$('fxResult').textContent=amount.toLocaleString('en-MY',{maximumFractionDigits:2})+' '+to;return}let rate=liveRate;if(!rate&&state.fx&&state.fx.rate&&state.fx.from===from&&state.fx.to===to)rate=Number(state.fx.rate);if(!rate){$('fxResult').textContent='Rate not loaded';return}$('fxResult').textContent=(amount*rate).toLocaleString('en-MY',{maximumFractionDigits:2})+' '+to}
+function setTravelMode(){document.body.classList.toggle('travel-mode');const on=document.body.classList.contains('travel-mode');$('travelModeBtn').textContent=on?'☼ Exit travel mode':'☼ Toggle travel mode';$('floatingTravelMode').textContent=on?'Exit travel mode':'☼ Travel mode';}
+function renderDateSelect(){
+ const sel=$('daySelect');sel.innerHTML=dateList().map(d=>`<option value="${d}">${fmtDate(d,{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</option>`).join('');sel.value=selectedDate;
+}
+function renderItinerary(){
+ const dayActivities=state.activities.filter(a=>a.date===selectedDate).sort((a,b)=>(a.time||'99:99').localeCompare(b.time||'99:99'));
+ $('dayTitle').textContent=fmtDate(selectedDate,{weekday:'long',day:'numeric',month:'long'});
+ const timeline=$('timeline');
+ if(!dayActivities.length)timeline.innerHTML='<div class="empty">A little blank space for a new adventure.<br><button class="btn soft small" style="margin-top:12px" id="emptyAdd">＋ Add the first activity</button></div>';
+ else timeline.innerHTML=dayActivities.map((a,i)=>`<article class="activity">
+  <div class="activity-time">${esc(a.time||'Anytime')}</div>
+  <div><h4>${esc(a.title)}</h4>${a.location?`<p>⌖ ${esc(a.location)} <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a.location)}" target="_blank" rel="noopener" aria-label="Open location in Google Maps">↗</a></p>`:''}${a.notes?`<div class="activity-note">${esc(a.notes)}</div>`:''}<div class="activity-cost">${money(a.cost||0)}</div></div>
+  <div class="activity-actions"><button class="icon-btn" data-act="up" data-id="${esc(a.id)}" title="Move earlier" ${i===0?'disabled':''}>↑</button><button class="icon-btn" data-act="down" data-id="${esc(a.id)}" title="Move later" ${i===dayActivities.length-1?'disabled':''}>↓</button><button class="icon-btn" data-act="edit" data-id="${esc(a.id)}" title="Edit">✎</button><button class="icon-btn" data-act="delete" data-id="${esc(a.id)}" title="Delete">×</button></div>
+ </article>`).join('');
+ const dayTotal=dayActivities.reduce((sum,a)=>sum+Number(a.cost||0),0);
+ $('daySummary').innerHTML=`<span>☼ ${dayActivities.length} ${dayActivities.length===1?'activity':'activities'}</span><span>♡ Planned activity costs: <strong>${money(dayTotal)}</strong></span><span>⌁ <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dayActivities.map(a=>a.location).filter(Boolean).join(' ' )||'Seoul South Korea')}" target="_blank" rel="noopener">View day on map ↗</a></span>`;
+ const emptyAdd=$('emptyAdd');if(emptyAdd)emptyAdd.addEventListener('click',()=>newActivity());
+ timeline.querySelectorAll('[data-act]').forEach(btn=>btn.addEventListener('click',()=>activityAction(btn.dataset.act,btn.dataset.id)));
+}
+function newActivity(){ $('activityForm').reset();$('activityId').value='';$('activityDate').value=selectedDate;$('activityCost').value='0';$('activityModalTitle').textContent='Add an activity';openModal('activityModal')}
+function editActivity(id){const a=state.activities.find(x=>x.id===id);if(!a)return;$('activityForm').reset();$('activityId').value=a.id;$('activityTitle').value=a.title;$('activityDate').value=a.date;$('activityTime').value=a.time||'';$('activityLocation').value=a.location||'';$('activityCost').value=a.cost||0;$('activityNotes').value=a.notes||'';$('activityModalTitle').textContent='Edit activity';openModal('activityModal')}
+function activityAction(action,id){
+ const a=state.activities.find(x=>x.id===id);if(!a)return;
+ if(action==='edit')return editActivity(id);
+ if(action==='delete'){if(confirm(`Delete "${a.title}"?`)){state.activities=state.activities.filter(x=>x.id!==id);persist();renderItinerary();showToast('Activity deleted.')}return}
+ if(action==='up'||action==='down'){const list=state.activities.filter(x=>x.date===a.date).sort((x,y)=>(x.time||'99:99').localeCompare(y.time||'99:99'));const i=list.findIndex(x=>x.id===id),j=action==='up'?i-1:i+1;if(j<0||j>=list.length)return;const other=list[j];const t=a.time;a.time=other.time;other.time=t;if(a.time===other.time){a.time=action==='up'?'08:00':'22:00'}persist();renderItinerary()}
+}
+$('daySelect').addEventListener('change',e=>{selectedDate=e.target.value;renderItinerary()});
+$('addActivityBtn').addEventListener('click',newActivity);
+$('activityForm').addEventListener('submit',e=>{
+ e.preventDefault();const id=$('activityId').value;
+ const item={id:id||uid(),title:$('activityTitle').value.trim(),date:$('activityDate').value,time:$('activityTime').value,location:$('activityLocation').value.trim(),cost:Math.max(0,Number($('activityCost').value)||0),notes:$('activityNotes').value.trim()};
+ if(!item.title||!item.date)return;
+ if(id)state.activities=state.activities.map(a=>a.id===id?item:a);else state.activities.push(item);
+ selectedDate=item.date;renderDateSelect();persist();renderItinerary();closeModal('activityModal');showToast(id?'Activity updated.':'Activity added.');
+});
+function renderBudget(){
+ const total=state.expenses.reduce((s,e)=>s+Number(e.amount||0),0),budget=Math.max(0,Number(state.settings.budget)||0),remaining=budget-total;
+ $('budgetBig').textContent=money(budget);$('spentLabel').textContent=money(total)+' spent';$('remainingLabel').textContent=money(remaining)+' '+(remaining>=0?'left':'over budget');
+ $('budgetBar').style.width=(budget?Math.min(100,total/budget*100):0)+'%';
+ const list=$('expenseList');
+ if(!state.expenses.length)list.innerHTML='<div class="empty">No expenses logged yet.<br>Add your first expense to start tracking.</div>';
+ else list.innerHTML=state.expenses.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(e=>`<div class="expense"><div><strong>${esc(e.title)}</strong><div class="meta">${esc(e.category||'Other')} · ${esc(e.date||'No date')}${e.notes?' · '+esc(e.notes):''}</div><div style="margin-top:5px"><button class="btn small" data-exp-edit="${esc(e.id)}">Edit</button> <button class="btn small danger" data-exp-delete="${esc(e.id)}">Delete</button></div></div><div class="expense-amount">${money(e.amount)}</div></div>`).join('');
+ const cats=['Flights','Accommodation','Transport','Food','Shopping','Activities','Other'];
+ $('categoryBars').innerHTML=cats.map(c=>{const n=state.expenses.filter(e=>e.category===c).reduce((s,e)=>s+Number(e.amount||0),0);return `<div class="category-row"><div class="cat-top"><span>${c}</span><strong>${money(n)}</strong></div><div class="progress"><span style="width:${total?Math.min(100,n/total*100):0}%;background:${c==='Food'?'#c9a18f':c==='Shopping'?'#b8a0bc':c==='Transport'?'#d9b66f':'var(--sage-dark)'}"></span></div></div>`}).join('');
+ list.querySelectorAll('[data-exp-edit]').forEach(b=>b.addEventListener('click',()=>editExpense(b.dataset.expEdit)));
+ list.querySelectorAll('[data-exp-delete]').forEach(b=>b.addEventListener('click',()=>{const e=state.expenses.find(x=>x.id===b.dataset.expDelete);if(e&&confirm(`Delete "${e.title}"?`)){state.expenses=state.expenses.filter(x=>x.id!==e.id);persist();renderBudget();showToast('Expense deleted.')}}));
+}
+function newExpense(){$('expenseForm').reset();$('expenseId').value='';$('expenseDate').value=selectedDate;$('expenseModalTitle').textContent='Add an expense';openModal('expenseModal')}
+function editExpense(id){const e=state.expenses.find(x=>x.id===id);if(!e)return;$('expenseId').value=e.id;$('expenseTitle').value=e.title;$('expenseAmount').value=e.amount;$('expenseCategory').value=e.category||'Other';$('expenseDate').value=e.date||selectedDate;$('expenseNotes').value=e.notes||'';$('expenseModalTitle').textContent='Edit expense';openModal('expenseModal')}
+$('addExpenseBtn').addEventListener('click',newExpense);
+$('expenseForm').addEventListener('submit',e=>{e.preventDefault();const id=$('expenseId').value,item={id:id||uid(),title:$('expenseTitle').value.trim(),amount:Math.max(0,Number($('expenseAmount').value)||0),category:$('expenseCategory').value,date:$('expenseDate').value,notes:$('expenseNotes').value.trim()};if(!item.title)return;if(id)state.expenses=state.expenses.map(x=>x.id===id?item:x);else state.expenses.push(item);persist();renderBudget();closeModal('expenseModal');showToast(id?'Expense updated.':'Expense added.')});
+function renderPacking(){
+ const list=$('packingList'),done=state.todos.filter(p=>p.done).length,total=state.todos.length,pct=total?Math.round(done/total*100):0;
+ $('packingCount').textContent=`${total} tasks`;$('packingProgressText').textContent=`${done} of ${total} completed`;$('statPacking').textContent=pct+'%';$('packingBar').style.width=pct+'%';
+ if(!total){list.innerHTML='<div class="empty">Your to-do list is clear. Add a task you need to complete.</div>';return}
+ list.innerHTML=state.todos.map(p=>`<div class="check-item ${p.done?'done':''}"><input type="checkbox" data-pack-check="${esc(p.id)}" ${p.done?'checked':''} aria-label="Mark ${esc(p.text)} complete"><span>${esc(p.text)}</span><button class="icon-btn" data-pack-delete="${esc(p.id)}" aria-label="Delete ${esc(p.text)}">×</button></div>`).join('');
+ list.querySelectorAll('[data-pack-check]').forEach(c=>c.addEventListener('change',()=>{const p=state.todos.find(x=>x.id===c.dataset.packCheck);if(p)p.done=c.checked;persist();renderPacking()}));
+ list.querySelectorAll('[data-pack-delete]').forEach(b=>b.addEventListener('click',()=>{state.todos=state.todos.filter(p=>p.id!==b.dataset.packDelete);persist();renderPacking()}));
+}
+$('addPackingBtn').addEventListener('click',()=>{$('packingForm').reset();openModal('packingModal')});
+$('packingForm').addEventListener('submit',e=>{e.preventDefault();const text=$('packingText').value.trim();if(text){state.todos.push({id:uid(),text,done:false});persist();renderPacking();closeModal('packingModal');showToast('To-do task added.')}});
+$('clearPackedBtn').addEventListener('click',()=>{const n=state.todos.filter(p=>p.done).length;if(n&&confirm(`Remove ${n} completed task(s) from the list?`)){state.todos=state.todos.filter(p=>!p.done);persist();renderPacking();showToast('Completed tasks removed.')}});
+function renderFoodSpots(){
+ const list=$('savedFoodSpots');if(!list)return;
+ if(!state.foodSpots||!state.foodSpots.length){list.innerHTML='<div class="empty">Your saved food spots will appear here. Add one above when you find somewhere you want to try.</div>';return}
+ list.innerHTML=state.foodSpots.map(f=>`<div class="expense"><div><strong>${esc(f.name)}</strong><div class="meta">${esc(f.area||'Area not specified')}${f.notes?' · '+esc(f.notes):''}</div>${f.map?`<div><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(f.name+' '+(f.area||''))}" target="_blank" rel="noopener">Open in Google Maps ↗</a></div>`:''}</div><button class="btn small danger" data-food-delete="${esc(f.id)}">Delete</button></div>`).join('');
+ list.querySelectorAll('[data-food-delete]').forEach(b=>b.addEventListener('click',()=>{state.foodSpots=state.foodSpots.filter(f=>f.id!==b.dataset.foodDelete);persist();renderFoodSpots()}));
+}
+$('addFoodSpotBtn').addEventListener('click',()=>{const name=$('foodSpotName').value.trim();if(!name){$('foodSpotName').focus();return}state.foodSpots.push({id:uid(),name,area:$('foodSpotArea').value.trim(),notes:$('foodSpotNotes').value.trim(),map:true});$('foodSpotName').value='';$('foodSpotArea').value='';$('foodSpotNotes').value='';persist();renderFoodSpots();showToast('Food spot saved.')});
+function safeBookingUrl(raw){try{const u=new URL(String(raw||''));return (u.protocol==='https:'||u.protocol==='http:')?u.href:''}catch(e){return ''}}
+function renderBookings(){
+ const list=$('bookingList');if(!list)return;const items=Array.isArray(state.bookingItems)?state.bookingItems:[];
+ $('bookingCount').textContent=items.length+' booking'+(items.length===1?'':'s');
+ if(!items.length){list.innerHTML='<div class="empty" style="grid-column:1/-1">No bookings added yet. Choose “Add booking” to start.</div>';return}
+ const sorted=[...items].sort((a,b)=>String(a.start||'9999').localeCompare(String(b.start||'9999')));
+ list.innerHTML=sorted.map(b=>{const link=safeBookingUrl(b.link);const dates=[b.start?new Date(b.start).toLocaleString(): '',b.end?'to '+new Date(b.end).toLocaleString():''].filter(Boolean).join(' ');return `<article class="booking-entry"><div class="booking-entry-top"><span class="pill">${esc(b.type||'Other')}</span><span class="booking-status ${(b.status||'').toLowerCase()==='cancelled'?'cancelled':''}">${esc(b.status||'Planned')}</span></div><h4>${esc(b.title||'Untitled booking')}</h4>${dates?`<div class="booking-meta">◷ ${esc(dates)}</div>`:''}${b.location?`<div class="booking-meta">⌖ ${esc(b.location)}</div>`:''}${b.reference?`<div class="booking-meta">Reference: ${esc(b.reference)}</div>`:''}${b.cost!==''&&b.cost!=null&&Number.isFinite(Number(b.cost))?`<div class="booking-meta"><strong>RM ${Number(b.cost).toLocaleString('en-MY',{minimumFractionDigits:2,maximumFractionDigits:2})}</strong></div>`:''}${b.notes?`<div class="booking-meta">${esc(b.notes).replace(/\n/g,'<br>')}</div>`:''}${link?`<div class="booking-meta"><a href="${esc(link)}" target="_blank" rel="noopener noreferrer">Open booking website ↗</a></div>`:''}<div class="booking-entry-actions"><button class="btn small" data-booking-edit="${esc(b.id)}">Edit</button><button class="btn small danger" data-booking-delete="${esc(b.id)}">Delete</button></div></article>`}).join('');
+ list.querySelectorAll('[data-booking-edit]').forEach(btn=>btn.addEventListener('click',()=>editBooking(btn.dataset.bookingEdit)));
+ list.querySelectorAll('[data-booking-delete]').forEach(btn=>btn.addEventListener('click',()=>{const b=items.find(x=>x.id===btn.dataset.bookingDelete);if(!b)return;if(confirm(`Delete “${b.title||'this booking'}”? This cannot be undone unless you have a backup.`)){state.bookingItems=items.filter(x=>x.id!==b.id);persist();renderBookings();showToast('Booking deleted.')}}));
+}
+function resetBookingForm(){ $('bookingForm').reset();$('bookingId').value='';$('bookingModalTitle').textContent='Add a booking';$('bookingStatus').value='Planned'; }
+function editBooking(id){const b=(state.bookingItems||[]).find(x=>x.id===id);if(!b)return; $('bookingId').value=b.id;$('bookingType').value=b.type||'Other';$('bookingStatus').value=b.status||'Planned';$('bookingTitle').value=b.title||'';$('bookingStart').value=b.start||'';$('bookingEnd').value=b.end||'';$('bookingLocation').value=b.location||'';$('bookingReference').value=b.reference||'';$('bookingCost').value=b.cost??'';$('bookingLink').value=b.link||'';$('bookingNotes').value=b.notes||'';$('bookingModalTitle').textContent='Edit booking';openModal('bookingModal')}
+$('addBookingBtn').addEventListener('click',()=>{resetBookingForm();openModal('bookingModal')});
+$('closeBookingModal').addEventListener('click',()=>closeModal('bookingModal'));$('cancelBooking').addEventListener('click',()=>closeModal('bookingModal'));
+$('bookingForm').addEventListener('submit',e=>{e.preventDefault();const title=$('bookingTitle').value.trim();if(!title){$('bookingTitle').focus();return}const linkRaw=$('bookingLink').value.trim();const link=linkRaw?safeBookingUrl(linkRaw):'';if(linkRaw&&!link){alert('Please enter a valid http:// or https:// booking link.');return}const rawCost=$('bookingCost').value;const item={id:$('bookingId').value||uid(),type:$('bookingType').value,status:$('bookingStatus').value,title,start:$('bookingStart').value,end:$('bookingEnd').value,location:$('bookingLocation').value.trim(),reference:$('bookingReference').value.trim(),cost:rawCost===''?'':Math.max(0,Number(rawCost)||0),link,notes:$('bookingNotes').value.trim(),updatedAt:new Date().toISOString()};if(item.start&&item.end&&item.end<item.start){alert('The end date/time should be after the start date/time.');return}state.bookingItems=Array.isArray(state.bookingItems)?state.bookingItems:[];const idx=state.bookingItems.findIndex(x=>x.id===item.id);if(idx>=0)state.bookingItems[idx]=item;else state.bookingItems.push(item);persist();renderBookings();closeModal('bookingModal');showToast(idx>=0?'Booking updated.':'Booking saved.')});
+function renderStats(){
+ const spent=state.expenses.reduce((s,e)=>s+Number(e.amount||0),0),budget=Math.max(0,Number(state.settings.budget)||0);
+ $('statBudget').textContent=money(budget);$('statSpent').textContent=money(spent);$('statSpentNote').textContent=budget?`${Math.round(spent/budget*100)}% of planned budget`:'Set a budget to compare';
+ const done=state.todos.filter(p=>p.done).length;$('statPacking').textContent=(state.todos.length?Math.round(done/state.todos.length*100):0)+'%';$('packingBar').style.width=(state.todos.length?done/state.todos.length*100:0)+'%';
+}
+function loadSettings(){
+ $('tripName').value=state.settings.name||'';$('budgetInput').value=state.settings.budget??5000;$('currency').value=state.settings.currency||'MYR';
+ document.querySelectorAll('[data-booking]').forEach(el=>el.value=state.bookings[el.dataset.booking]||'');
+}
+function saveSettings(){
+ state.settings.name=$('tripName').value.trim()||'My Travel Journal';state.settings.budget=Math.max(0,Number($('budgetInput').value)||0);state.settings.currency=$('currency').value;
+ document.title=state.settings.name+' — My Travel Journal';persist();renderBudget();showToast('Trip settings saved.');
+}
+$('saveSettings').addEventListener('click',saveSettings);
+$('budgetInput').addEventListener('change',saveSettings);$('currency').addEventListener('change',saveSettings);
+$('tripName').addEventListener('change',saveSettings);
+document.querySelectorAll('[data-booking]').forEach(el=>el.addEventListener('input',()=>{state.bookings[el.dataset.booking]=el.value;persist()}));
+function download(filename,content,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+$('exportBtn').addEventListener('click',()=>{download('south-korea-travel-journal-backup.json',JSON.stringify(state,null,2),'application/json');showToast('Trip backup exported.')});
+$('importInput').addEventListener('change',async e=>{
+ const file=e.target.files&&e.target.files[0];if(!file)return;
+ try{const data=JSON.parse(await file.text());if(!data||typeof data!=='object'||!Array.isArray(data.activities)||!Array.isArray(data.expenses)||!Array.isArray(data.packing))throw new Error('Invalid backup');if(!confirm('Import this backup and replace the current trip data? Export your current data first if you want to keep it.'))return;state=mergeState(defaultState(),data);selectedDate=START;persist();renderDateSelect();loadSettings();renderItinerary();renderBudget();renderPacking();renderBookings();showToast('Trip backup imported.')}
+ catch(err){alert('This file does not look like a valid Travel Journal backup. Nothing was changed.')}
+ finally{e.target.value=''}
+});
+[['closeBookingModal','bookingModal'],['cancelBooking','bookingModal'],['closeActivityModal','activityModal'],['cancelActivity','activityModal'],['closeExpenseModal','expenseModal'],['cancelExpense','expenseModal'],['closePackingModal','packingModal'],['cancelPacking','packingModal']].forEach(([btn,modal])=>$(btn).addEventListener('click',()=>closeModal(modal)));
+document.querySelectorAll('.modal-backdrop').forEach(back=>back.addEventListener('click',e=>{if(e.target===back)back.classList.remove('open')}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-backdrop.open').forEach(m=>m.classList.remove('open'))});
+$('mapSearchBtn').addEventListener('click',()=>{const q=$('mapSearch').value.trim();if(!q){$('mapSearch').focus();return}window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q),'_blank','noopener')});
+$('mapSearch').addEventListener('keydown',e=>{if(e.key==='Enter')$('mapSearchBtn').click()});
+$('routeBtn').addEventListener('click',()=>window.open('https://www.google.com/maps/dir/?api=1&origin=Seoul+South+Korea&destination=Busan+South+Korea&travelmode=transit','_blank','noopener'));
+$('travelModeBtn').addEventListener('click',setTravelMode);$('floatingTravelMode').addEventListener('click',setTravelMode);
+$('fxAmount').addEventListener('input',convertFx);$('fxFrom').addEventListener('change',()=>{liveRate=null;refreshFxRate()});$('fxTo').addEventListener('change',()=>{liveRate=null;refreshFxRate()});$('convertBtn').addEventListener('click',convertFx);$('refreshRateBtn').addEventListener('click',refreshFxRate);
+$('dailyBudget').value=state.dailyBudget??250;$('dailyBudget').addEventListener('change',()=>{state.dailyBudget=Math.max(0,Number($('dailyBudget').value)||0);persist();$('dailyBudgetNote').textContent=`Planning target: RM ${state.dailyBudget.toLocaleString('en-MY',{maximumFractionDigits:2})} per day. This is separate from exchange rates.`});
+$('checkDate').addEventListener('change',renderDailyChecklist);$('resetDayChecklist').addEventListener('click',()=>{const d=$('checkDate').value;if(confirm('Reset this day’s checklist?')){delete state.dailyChecks[d];persist();renderDailyChecklist()}});
+$('openBookingsBtn').addEventListener('click',()=>switchTab('bookings'));$('exportBackupBtn').addEventListener('click',()=>$('exportBtn').click());
+$('cloudSignInBtn').addEventListener('click',onCloudSignIn);$('cloudSignUpBtn').addEventListener('click',onCloudSignUp);$('cloudSignOutBtn').addEventListener('click',onCloudSignOut);$('cloudSyncNowBtn').addEventListener('click',()=>saveCloudState(true));
+$('cloudPassword').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();onCloudSignIn()}});
+if(cloudClient){cloudClient.auth.getSession().then(async({data,error})=>{if(error)throw error;if(data.session){cloudUser=data.session.user;setCloudButtons(true);await loadCloudState()}else{setCloudButtons(false);setCloudStatus('<strong>Ready to connect.</strong> Create an account or sign in to enable cloud sync. Export a backup first.')}}).catch(err=>{console.error(err);setCloudStatus('<strong>Could not check sign-in status.</strong> Refresh the page and try again.')})}else{setCloudStatus('<strong>Could not load Supabase client.</strong> Refresh the page and check your internet connection.')}
+renderDateSelect();loadSettings();renderItinerary();renderBudget();renderPacking();renderFoodSpots();renderBookings();renderStats();renderCountdown();fillDailyDateSelect();refreshFxRate();loadWeather();
+})();
+</script>
+</body>
+</html>
